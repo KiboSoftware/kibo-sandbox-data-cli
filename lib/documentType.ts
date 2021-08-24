@@ -79,4 +79,4 @@ var documentType = require("mozu-node-sdk/clients/content/documentType")(
   appsClient
 );
 //documentType.getDocumentType().then(log, reportError);
-documentType.createDocumentType({ body: data.data[0] }).then(log, reportError);
+documentType.createDocumentType( data.data[0] ).then(log, reportError);
