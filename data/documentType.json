@@ -1,66 +1,66 @@
 {
-    "data": [
+  "data": [
+    {
+      "name": "banner",
+      "namespace": "mozuadmin",
+      "documentTypeFQN": "banner@mozuadmin",
+      "metadata": {
+        "isWebPage": false
+      },
+      "properties": [
         {
-            "name": "banner",
+          "name": "tag",
+          "isRequired": false,
+          "isMultiValued": true,
+          "propertyType": {
+            "name": "string",
             "namespace": "mozu",
-            "documentTypeFQN": "banner@mozu",
-            "metadata": {
-             "isWebPage": false
-            },
-            "properties": [
-             {
-              "name": "tag",
-              "isRequired": false,
-              "isMultiValued": true,
-              "propertyType": {
-               "name": "string",
-               "namespace": "mozu",
-               "propertyTypeFQN": "string@mozu",
-               "installationPackage": "core@mozu",
-               "version": "1.0",
-               "dataType": "string"
-              }
-             },
-             {
-              "name": "slot",
-              "isRequired": false,
-              "isMultiValued": false,
-              "propertyType": {
-               "name": "string",
-               "namespace": "mozu",
-               "propertyTypeFQN": "string@mozu",
-               "installationPackage": "core@mozu",
-               "version": "1.0",
-               "dataType": "string"
-              }
-             },
-             {
-              "name": "title",
-              "isRequired": true,
-              "isMultiValued": false,
-              "propertyType": {
-               "name": "string",
-               "namespace": "mozu",
-               "propertyTypeFQN": "string@mozu",
-               "installationPackage": "core@mozu",
-               "version": "1.0",
-               "dataType": "string"
-              }
-             },
-             {
-              "name": "subtitle",
-              "isRequired": false,
-              "isMultiValued": false,
-              "propertyType": {
-               "name": "string",
-               "namespace": "mozu",
-               "propertyTypeFQN": "string@mozu",
-               "installationPackage": "core@mozu",
-               "version": "1.0",
-               "dataType": "string"
-              }
-             }
-            ]
+            "propertyTypeFQN": "string@mozu",
+            "installationPackage": "core@mozu",
+            "version": "1.0",
+            "dataType": "string"
+          }
+        },
+        {
+          "name": "slot",
+          "isRequired": false,
+          "isMultiValued": false,
+          "propertyType": {
+            "name": "string",
+            "namespace": "mozu",
+            "propertyTypeFQN": "string@mozu",
+            "installationPackage": "core@mozu",
+            "version": "1.0",
+            "dataType": "string"
+          }
+        },
+        {
+          "name": "title",
+          "isRequired": true,
+          "isMultiValued": false,
+          "propertyType": {
+            "name": "string",
+            "namespace": "mozu",
+            "propertyTypeFQN": "string@mozu",
+            "installationPackage": "core@mozu",
+            "version": "1.0",
+            "dataType": "string"
+          }
+        },
+        {
+          "name": "subtitle",
+          "isRequired": false,
+          "isMultiValued": false,
+          "propertyType": {
+            "name": "string",
+            "namespace": "mozu",
+            "propertyTypeFQN": "string@mozu",
+            "installationPackage": "core@mozu",
+            "version": "1.0",
+            "dataType": "string"
+          }
         }
-    ]
+      ]
+    }
+  ]
 }

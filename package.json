@@ -7,7 +7,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "import:document-types": "npm run build && node lib/documentType.ts",
+    "import:document-types": "npm run build && node dist/documentType.js --importtypes --types ./data/documentType.json",
+    "import:document-list": "npm run build && node dist/documentList.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
