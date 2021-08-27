@@ -7,8 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "import:document-types": "npm run build && node dist/documentType.js --importtypes --types ./data/documentType.json",
-    "import:document-list": "npm run build && node dist/documentList.js",
+    "import:document-types": "npm run build && node dist/documentType.js --upsert --import data\\documentType.jsonl",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
@@ -16,9 +15,11 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^16.7.1",
+    "nconf": "^0.11.3",
     "typescript": "^4.3.5"
   },
   "dependencies": {
+    "@jsonlines/core": "^1.0.2",
     "mozu-node-sdk": "^2.15.6"
   }
 }
