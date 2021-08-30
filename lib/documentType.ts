@@ -1,9 +1,9 @@
-var fs = require("fs");
-var path = require("path");
+import path from "path";
 
-var { parse } = require("@jsonlines/core");
+import { helper } from "./utilites";
 
-var nconf = require("nconf");
+import nconf from "nconf";
+
 nconf.argv();
 
 const documentTypeData = nconf.get("import");
@@ -14,30 +14,22 @@ var documentType = require("mozu-node-sdk/clients/content/documentType")(
   appsClient
 );
 
-const dataFilePath = path.join(__dirname, "../");
+const filePath = path.join(__dirname, "../");
 
-const source = fs.createReadStream(dataFilePath + documentTypeData);
-const parseStream = parse();
-const dataStream = source.pipe(parseStream);
+const dataFilePath = filePath + documentTypeData;
 
-//processing data to create DocumentType
-
-(async function () {
-  for await (let documentTypeData of dataStream) {
-    await createDocumentType(documentTypeData);
-  }
-})();
+let dataStream = helper(dataFilePath);
 
 //function for creating documentType
 const createDocumentType = async (documentTypeData) => {
   try {
-    const result = await documentType.createDocumentType(documentTypeData);
+    await documentType.createDocumentType(documentTypeData);
     console.log("Successfully created document");
   } catch (error) {
     console.error("Error in creating Document", error);
     if (error.originalError.statusCode === 409 && nconf.get("upsert")) {
       try {
-        const updateDocumentTypeResult = await documentType.updateDocumentType(
+        await documentType.updateDocumentType(
           { documentTypeName: documentTypeData.name },
           documentTypeData
         );
@@ -48,3 +40,11 @@ const createDocumentType = async (documentTypeData) => {
     }
   }
 };
+
+//processing data to create DocumentType
+
+(async function () {
+  for await (let documentTypeData of dataStream) {
+    await createDocumentType(documentTypeData);
+  }
+})();
