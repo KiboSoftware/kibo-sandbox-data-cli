@@ -1,6 +1,6 @@
 import path from "path";
 
-import { helper } from "./utilites";
+import { createJsonLFileStream } from "./utilites";
 
 import nconf from "nconf";
 
@@ -18,7 +18,7 @@ const filePath = path.join(__dirname, "../");
 
 const dataFilePath = filePath + documentTypeData;
 
-let dataStream = helper(dataFilePath);
+let dataStream = createJsonLFileStream(dataFilePath);
 
 //function for creating documentType
 const createDocumentType = async (documentTypeData) => {
