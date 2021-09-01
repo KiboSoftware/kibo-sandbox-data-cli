@@ -8,6 +8,11 @@
   },
   "scripts": {
     "import:document-types": "npm run build && node dist/documentType.js --upsert --import data\\documentType.jsonl",
+    "import:document-list": "npm run build && node dist/documentList.js --upsert --import data\\documentLists.jsonl",
+    "import:document-list-type": "npm run build && node dist/documentListType.js --upsert --import data\\documentLists.jsonl",
+    "import:document": "npm run build && node dist/document.js --upsert --import data\\documents.jsonl",
+    "clean:document": "npm run build && node dist/document.js --upsert --import data\\documents.jsonl",
+    "clean:document-list": "npm run build && node dist/documentList.js  --clean data\\documentLists.jsonl",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
