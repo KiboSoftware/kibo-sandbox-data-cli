@@ -20,24 +20,32 @@ const dataFilePath = filePath + documentData;
 
 let dataStream = createJsonLFileStream(dataFilePath);
 
-//function for creating documentType
+//function for creating documentType
 const generateDocument = async (documentData) => {
   try {
-    await document.createDocument({
-      documentListName: documentData.listFQN,
-      responseFields: documentData,
-    });
-    console.log("Successfully created documentData");
+    await document.createDocument(
+      {
+        documentListName: documentData.listFQN,
+      },
+      { body: documentData }
+    );
+    console.log("Successfully created documentData");
   } catch (error) {
-    console.error("Error in creating documentData", error);
-    if (error.originalError.statusCode === 500 && nconf.get("upsert")) {
+    console.error("Error in creating documentData", error);
+    if (error.originalError.statusCode === 409 && nconf.get("upsert")) {
       try {
-        await document.updateDocument({
-          documentListName: documentData.listFQN,
-        });
-        console.log("Updated documentData Successfully");
+        //before updating will fetch documentId
+        const documentID = await fetchDocumentDetails(documentData);
+        await document.updateDocument(
+          {
+            documentListName: documentData.listFQN,
+            documentId: documentID,
+          },
+          { body: documentData }
+        );
+        console.log("Updated documentData Successfully");
       } catch (updateError) {
-        console.error("Error while updating documentData", updateError);
+        console.error("Error while updating documentData", updateError);
       }
     }
   }
@@ -49,13 +57,28 @@ const deleteDocuments = async (documentListData) => {
     await document.deleteDocument({
       documentListName: documentListData.listFQN,
     });
-    console.log("deleted document successfully");
+    console.log("Deleted Document successfully");
   } catch (deleteError) {
     console.error("Error while cleaning , deleting document", deleteError);
   }
 };
 
-//processing data to create DocumentType
+//below function will fetch document data, for getting documentId of document
+const fetchDocumentDetails = async (documentData) => {
+  const result = await document.getDocument({
+    documentListName: documentData.listFQN,
+  });
+  for (let documentDetails of result.items) {
+    if (documentData.name === documentDetails.name) {
+      console.log("documentId for updation", documentDetails.id);
+      return documentDetails.id;
+    } else {
+      console.log("Didnt find documentId required for updation");
+    }
+  }
+};
+
+//processing data to create Document
 if (nconf.get("import")) {
   (async function () {
     for await (let documentData of dataStream) {
