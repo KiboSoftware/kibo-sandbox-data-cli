@@ -1,6 +1,6 @@
 import path from "path";
 
-import { createJsonLFileStream } from "./utilites";
+import { createJsonLFileStream, createAppsClientMozu } from "./utilites";
 
 import nconf from "nconf";
 
@@ -8,7 +8,7 @@ nconf.argv();
 
 const documentTypeData = nconf.get("import");
 
-var appsClient = require("mozu-node-sdk/clients/platform/application")();
+var appsClient = createAppsClientMozu();
 
 var documentType = require("mozu-node-sdk/clients/content/documentType")(
   appsClient

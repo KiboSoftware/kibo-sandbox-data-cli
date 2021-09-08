@@ -1,6 +1,0 @@
-{
-    "appKey": "mozuadmin.mpoc_app.1.0.0.Release",
-    "sharedSecret": "1d16d7d35b8542cba2f99216f20dca32",
-    "baseUrl": "https://home.dev10.kubedev.kibo-dev.com/",
-    "tenant": "17194"
-}

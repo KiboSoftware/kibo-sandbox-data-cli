@@ -11,6 +11,7 @@
     "import:document-list": "npm run build && node dist/documentList.js --upsert --import data\\documentLists.jsonl",
     "import:document-list-type": "npm run build && node dist/documentListType.js --upsert --import data\\documentLists.jsonl",
     "import:document": "npm run build && node dist/document.js --upsert --import data\\documents.jsonl",
+    "import:general-settings": "npm run build && node dist/generalSettings.js --upsert --import data\\general-settings.jsonl",
     "clean:document": "npm run build && node dist/document.js --upsert --clean data\\documents.jsonl",
     "clean:document-list": "npm run build && node dist/documentList.js  --clean data\\documentLists.jsonl",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -25,6 +26,7 @@
   },
   "dependencies": {
     "@jsonlines/core": "^1.0.2",
-    "mozu-node-sdk": "^2.15.6"
+    "dotenv": "^10.0.0",
+    "mozu-node-sdk": "^2.15.7"
   }
 }
