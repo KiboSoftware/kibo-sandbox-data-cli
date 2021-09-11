@@ -12,8 +12,12 @@
     "import:document-list-type": "npm run build && node dist/documentListType.js --upsert --import data\\documentLists.jsonl",
     "import:document": "npm run build && node dist/document.js --upsert --import data\\documents.jsonl",
     "import:general-settings": "npm run build && node dist/generalSettings.js --upsert --import data\\general-settings.jsonl",
+    "import:discounts": "npm run build && node dist/discount.js --upsert --import data\\discounts.jsonl",
+    "import:categories": "npm run build && node dist/category.js --upsert --import data\\categories.jsonl",
     "clean:document": "npm run build && node dist/document.js --upsert --clean data\\documents.jsonl",
     "clean:document-list": "npm run build && node dist/documentList.js  --clean data\\documentLists.jsonl",
+    "clean:discounts": "npm run build && node dist/discount.js  --clean data\\discounts.jsonl",
+    "clean:categories": "npm run build && node dist/category.js  --clean data\\categories.jsonl",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
