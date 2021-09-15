@@ -26,7 +26,10 @@ const generateDocumentList = async (documentListData) => {
     await documentList.createDocumentList(documentListData);
     console.log("Successfully created documentList");
   } catch (error) {
-    console.error("Error in creating DocumentList", error);
+    console.error(
+      "Error in creating DocumentList",
+      error.originalError.message
+    );
     if (error.originalError.statusCode === 500 && nconf.get("upsert")) {
       try {
         await documentList.updateDocumentList(
@@ -35,7 +38,10 @@ const generateDocumentList = async (documentListData) => {
         );
         console.log("Updated DocumentList Successfully");
       } catch (updateError) {
-        console.error("Error while updating documentlist", updateError);
+        console.error(
+          "Error while updating documentlist",
+          updateError.originalError.message
+        );
       }
     }
   }
@@ -49,7 +55,10 @@ const deleteDocumentList = async (documentListData) => {
     });
     console.log("Successfully deleted DocumentList");
   } catch (deleteError) {
-    console.error("Error while cleaning , deleting document", deleteError);
+    console.error(
+      "Error while cleaning , deleting document",
+      deleteError.originalError.message
+    );
   }
 };
 

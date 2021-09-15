@@ -25,7 +25,10 @@ const generateDocumentListType = async (documentListTypeData) => {
     await documentListType.createDocumentListType(documentListTypeData);
     console.log("Successfully created documentListType");
   } catch (error) {
-    console.error("Error in creating DocumentListType", error);
+    console.error(
+      "Error in creating DocumentListType",
+      error.originalError.message
+    );
     if (error.originalError.statusCode === 409 && nconf.get("upsert")) {
       try {
         await documentListType.updateDocumentListType(
@@ -34,7 +37,10 @@ const generateDocumentListType = async (documentListTypeData) => {
         );
         console.log("Updated DocumentListType Successfully");
       } catch (updateError) {
-        console.error("Error while updating documentListType", updateError);
+        console.error(
+          "Error while updating documentListType",
+          updateError.originalError.message
+        );
       }
     }
   }

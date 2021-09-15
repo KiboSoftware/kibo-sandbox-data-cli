@@ -28,7 +28,7 @@ const generateCategory = async (categoryData) => {
     );
     console.log("Successfully added categories");
   } catch (error) {
-    console.error("Error in adding categories", error);
+    console.error("Error in adding categories", error.originalError.message);
     if (error.originalError.statusCode === 409 && nconf.get("upsert")) {
       try {
         await categoryMethod.updateCategory(
@@ -37,7 +37,10 @@ const generateCategory = async (categoryData) => {
         );
         console.log("Updated Categories Successfully");
       } catch (updateError) {
-        console.error("Error while updating categories", updateError);
+        console.error(
+          "Error while updating categories",
+          updateError.originalError.message
+        );
       }
     }
   }
@@ -54,7 +57,10 @@ const deleteCategory = async (categoryData) => {
     });
     console.log("Successfully deleted categories");
   } catch (deleteError) {
-    console.error("Error while cleaning , deleting categories", deleteError);
+    console.error(
+      "Error while cleaning , deleting categories",
+      deleteError.originalError.message
+    );
   }
 };
 

@@ -26,7 +26,7 @@ const createDocumentType = async (documentTypeData) => {
     await documentType.createDocumentType(documentTypeData);
     console.log("Successfully created document");
   } catch (error) {
-    console.error("Error in creating Document", error);
+    console.error("Error in creating Document", error.originalError.message);
     if (error.originalError.statusCode === 409 && nconf.get("upsert")) {
       try {
         await documentType.updateDocumentType(
@@ -35,7 +35,10 @@ const createDocumentType = async (documentTypeData) => {
         );
         console.log("Updated DocumentType Successfully");
       } catch (updateError) {
-        console.error("Error while updating document", updateError);
+        console.error(
+          "Error while updating document",
+          updateError.originalError.message
+        );
       }
     }
   }

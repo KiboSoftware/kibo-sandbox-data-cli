@@ -29,7 +29,7 @@ const updateGeneralSettings = async (generalSettingData) => {
   } catch (updateError) {
     console.error(
       "Error while updating generalSettings",
-      updateError.originalError
+      updateError.originalError.message
     );
   }
 };

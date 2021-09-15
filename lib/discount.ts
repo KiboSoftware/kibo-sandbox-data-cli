@@ -25,7 +25,7 @@ const generateDiscount = async (discountData) => {
     await discountMethod.createDiscount(discountData);
     console.log("Successfully added discount");
   } catch (error) {
-    console.error("Error in adding discount", error);
+    console.error("Error in adding discount", error.originalError.message);
     if (error.originalError.statusCode === 409 && nconf.get("upsert")) {
       try {
         console.log("disocount id ", discountData.thresholdMessage.discountId);
@@ -35,7 +35,10 @@ const generateDiscount = async (discountData) => {
         );
         console.log("Updated Discount Successfully");
       } catch (updateError) {
-        console.error("Error while updating discount", updateError);
+        console.error(
+          "Error while updating discount",
+          updateError.originalError.message
+        );
       }
     }
   }
@@ -49,7 +52,10 @@ const deleteDiscount = async (discountData) => {
     });
     console.log("Successfully deleted discount");
   } catch (deleteError) {
-    console.error("Error while cleaning , deleting discount", deleteError);
+    console.error(
+      "Error while cleaning , deleting discount",
+      deleteError.originalError.message
+    );
   }
 };
 

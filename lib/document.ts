@@ -31,7 +31,10 @@ const generateDocument = async (documentData) => {
     );
     console.log("Successfully created documentData");
   } catch (error) {
-    console.error("Error in creating documentData", error);
+    console.error(
+      "Error in creating documentData",
+      error.originalError.message
+    );
     if (error.originalError.statusCode === 409 && nconf.get("upsert")) {
       try {
         //before updating will fetch documentId
@@ -45,7 +48,10 @@ const generateDocument = async (documentData) => {
         );
         console.log("Updated documentData Successfully");
       } catch (updateError) {
-        console.error("Error while updating documentData", updateError);
+        console.error(
+          "Error while updating documentData",
+          updateError.originalError.message
+        );
       }
     }
   }
@@ -59,7 +65,10 @@ const deleteDocuments = async (documentListData) => {
     });
     console.log("Deleted Document successfully");
   } catch (deleteError) {
-    console.error("Error while cleaning , deleting document", deleteError);
+    console.error(
+      "Error while cleaning , deleting document",
+      deleteError.originalError.message
+    );
   }
 };
 
