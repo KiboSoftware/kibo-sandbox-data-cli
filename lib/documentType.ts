@@ -1,42 +1,43 @@
-import path from "path";
+import path from 'path';
 
-import { createJsonLFileStream, createAppsClientMozu } from "./utilites";
+import {
+  createJsonLFileStream,
+  createAppsClientMozu,
+  createJsonLFileWriteStream,
+} from './utilites';
 
-import nconf from "nconf";
+import nconf from 'nconf';
 
 nconf.argv();
 
-const documentTypeData = nconf.get("import");
-
 var appsClient = createAppsClientMozu();
 
-var documentType = require("mozu-node-sdk/clients/content/documentType")(
+var documentType = require('mozu-node-sdk/clients/content/documentType')(
   appsClient
 );
 
-const filePath = path.join(__dirname, "../");
-
-const dataFilePath = filePath + documentTypeData;
-
-let dataStream = createJsonLFileStream(dataFilePath);
+const dataFilePath = require('path').join(
+  nconf.get('data') || './data',
+  'document-types.jsonl'
+);
 
 //function for creating documentType
 const createDocumentType = async (documentTypeData) => {
   try {
     await documentType.createDocumentType(documentTypeData);
-    console.log("Successfully created document");
+    console.log('Successfully created document');
   } catch (error) {
-    console.error("Error in creating Document", error.originalError.message);
-    if (error.originalError.statusCode === 409 && nconf.get("upsert")) {
+    console.error('Error in creating Document', error.originalError.message);
+    if (error.originalError.statusCode === 409 && nconf.get('upsert')) {
       try {
         await documentType.updateDocumentType(
           { documentTypeName: documentTypeData.name },
           documentTypeData
         );
-        console.log("Updated DocumentType Successfully");
+        console.log('Updated DocumentType Successfully');
       } catch (updateError) {
         console.error(
-          "Error while updating document",
+          'Error while updating document',
           updateError.originalError.message
         );
       }
@@ -44,10 +45,53 @@ const createDocumentType = async (documentTypeData) => {
   }
 };
 
-//processing data to create DocumentType
+async function* exportDocTypes() {
+  let page = 0;
+  while (true) {
+    let ret = await documentType.getDocumentTypes({
+      startIndex: page * 200,
+      pageSize: 200,
+    });
+    for (const item of ret.items) {
+      yield item;
+    }
+    page++;
+    if (ret.pageCount <= page) {
+      break;
+    }
+  }
+}
 
-(async function () {
+export async function deleteAllDocumentTypes() {
+  //na
+}
+export async function importAllDocumentTypes() {
+  let dataStream = createJsonLFileStream(dataFilePath);
   for await (let documentTypeData of dataStream) {
     await createDocumentType(documentTypeData);
+  }
+}
+export async function exportAllDocumentTypes() {
+  const stream = createJsonLFileWriteStream(dataFilePath);
+  for await (let item of exportDocTypes()) {
+    ['auditInfo'].forEach((key) => delete item[key]);
+    if (item.namespace === 'mozu') {
+      continue;
+    }
+    await stream.write(item);
+  }
+}
+
+(async function () {
+  if (nconf.get('clean')) {
+    await deleteAllDocumentTypes();
+  }
+
+  if (nconf.get('import')) {
+    await importAllDocumentTypes();
+  }
+
+  if (nconf.get('export')) {
+    await exportAllDocumentTypes();
   }
 })();

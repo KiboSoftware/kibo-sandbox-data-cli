@@ -1,46 +1,47 @@
-import path from "path";
+import path from 'path';
 
-import { createJsonLFileStream, createAppsClientMozu } from "./utilites";
+import {
+  createJsonLFileStream,
+  createAppsClientMozu,
+  createJsonLFileWriteStream,
+} from './utilites';
 
-import nconf from "nconf";
+import nconf from 'nconf';
 
 nconf.argv();
-
-const productAttributeDataPath = nconf.get("import") || nconf.get("clean");
 
 var appsClient = createAppsClientMozu();
 
 var productAttributeMethods =
-  require("mozu-node-sdk/clients/commerce/catalog/admin/attributedefinition/attribute")(
+  require('mozu-node-sdk/clients/commerce/catalog/admin/attributedefinition/attribute')(
     appsClient
   );
 
-const filePath = path.join(__dirname, "../");
-
-const dataFilePath = filePath + productAttributeDataPath;
-
-let dataStream = createJsonLFileStream(dataFilePath);
+const dataFilePath = require('path').join(
+  nconf.get('data') || './data',
+  'product-attributes.jsonl'
+);
 
 //function for creating productAttributes
 const generateProductAttribute = async (productAttributeData) => {
   try {
     await productAttributeMethods.addAttribute(productAttributeData);
-    console.log("Successfully added productAttribute");
+    console.log('Successfully added productAttribute');
   } catch (error) {
     console.error(
-      "Error in adding productAttribute",
+      'Error in adding productAttribute',
       error.originalError.message
     );
-    if (error.originalError.statusCode === 409 && nconf.get("upsert")) {
+    if (error.originalError.statusCode === 409 && nconf.get('upsert')) {
       try {
         await productAttributeMethods.updateAttribute(
           { attributeFQN: productAttributeData.attributeFQN },
           { body: productAttributeData }
         );
-        console.log("Updated productAttribute Successfully");
+        console.log('Updated productAttribute Successfully');
       } catch (updateError) {
         console.error(
-          "Error while updating productAttribute",
+          'Error while updating productAttribute',
           updateError.originalError.message
         );
       }
@@ -54,27 +55,59 @@ const deleteProductAttribute = async (productAttributeData) => {
     await productAttributeMethods.deleteAttribute({
       attributeFQN: productAttributeData.attributeFQN,
     });
-    console.log("Successfully deleted productAttribute");
+    console.log('Successfully deleted productAttribute');
   } catch (deleteError) {
     console.error(
-      "Error while cleaning , deleting productAttribute",
+      'Error while cleaning , deleting productAttribute',
       deleteError.originalError.message
     );
   }
 };
 
-//processing data to create/update productAttribute
-if (nconf.get("import")) {
-  (async function () {
-    for await (let productAttributeDetail of dataStream) {
-      await generateProductAttribute(productAttributeDetail);
+async function* exportProductAttributes() {
+  let page = 0;
+  while (true) {
+    let ret = await productAttributeMethods.getAttributes({
+      startIndex: page * 200,
+      pageSize: 200,
+    });
+    for (const item of ret.items) {
+      yield item;
     }
-  })();
-} else if (nconf.get("clean")) {
-  //productAttribute will be deleted
-  (async function () {
-    for await (let productAttributeDetail of dataStream) {
-      await deleteProductAttribute(productAttributeDetail);
+    page++;
+    if (ret.pageCount <= page) {
+      break;
     }
-  })();
+  }
 }
+
+export async function deleteAllProductAttributes() {
+  let dataStream = createJsonLFileStream(dataFilePath);
+  for await (let productAttributeDetail of dataStream) {
+    await deleteProductAttribute(productAttributeDetail);
+  }
+}
+export async function importAllProductAttributes() {
+  let dataStream = createJsonLFileStream(dataFilePath);
+  for await (let productAttributeDetail of dataStream) {
+    await generateProductAttribute(productAttributeDetail);
+  }
+}
+export async function exportAllProductAttributes() {
+  const stream = createJsonLFileWriteStream(dataFilePath);
+  for await (let item of exportProductAttributes()) {
+    ['auditInfo'].forEach((key) => delete item[key]);
+    await stream.write(item);
+  }
+}
+(async function () {
+  if (nconf.get('import')) {
+    await importAllProductAttributes();
+  }
+  if (nconf.get('clean')) {
+    await deleteAllProductAttributes();
+  }
+  if (nconf.get('export')) {
+    await exportAllProductAttributes();
+  }
+})();

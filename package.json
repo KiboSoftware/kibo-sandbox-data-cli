@@ -7,23 +7,10 @@
     "lib": "lib"
   },
   "scripts": {
-    "import:document-types": "npm run build && node dist/documentType.js --upsert --import data\\documentType.jsonl",
-    "import:document-list": "npm run build && node dist/documentList.js --upsert --import data\\documentLists.jsonl",
-    "import:document-list-type": "npm run build && node dist/documentListType.js --upsert --import data\\documentLists.jsonl",
-    "import:document": "npm run build && node dist/document.js --upsert --import data\\documents.jsonl",
-    "import:general-settings": "npm run build && node dist/generalSettings.js --upsert --import data\\general-settings.jsonl",
-    "import:discounts": "npm run build && node dist/discount.js --upsert --import data\\discounts.jsonl",
-    "import:categories": "npm run build && node dist/category.js --upsert --import data\\categories.jsonl",
-    "import:productAttributes": "npm run build && node dist/productAttribute.js --upsert --import data\\product-attributes.jsonl",
-    "import:productType": "npm run build && node dist/productType.js --upsert --import data\\product-types.jsonl",
-    "import:products": "npm run build && node dist/product.js --upsert --import data\\products.jsonl",
-    "clean:document": "npm run build && node dist/document.js --upsert --clean data\\documents.jsonl",
-    "clean:document-list": "npm run build && node dist/documentList.js  --clean data\\documentLists.jsonl",
-    "clean:discounts": "npm run build && node dist/discount.js  --clean data\\discounts.jsonl",
-    "clean:categories": "npm run build && node dist/category.js  --clean data\\categories.jsonl",
-    "clean:productAttributes": "npm run build && node dist/productAttribute.js --clean data\\product-attributes.jsonl",
-    "clean:productType": "npm run build && node dist/productType.js --clean data\\product-types.jsonl",
-    "clean:products": "npm run build && node dist/product.js --clean data\\products.jsonl",
+    "export:documents": "npm run build && node dist/document.js --export --doclists banners,hero_images,content_blocks ",
+    "export:all": "npm run build && node dist/index.js --export:all ",
+    "import:all": "npm run build && node dist/index.js --import:all ",
+    "pretier": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
@@ -31,12 +18,20 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^16.7.1",
+    "husky": "^7.0.4",
+    "lint-staged": "^11.2.6",
     "nconf": "^0.11.3",
-    "typescript": "^4.3.5"
+    "prettier": "2.4.1"
   },
   "dependencies": {
     "@jsonlines/core": "^1.0.2",
+    "cli-spinner": "^0.2.10",
     "dotenv": "^10.0.0",
-    "mozu-node-sdk": "^2.15.7"
+    "jsonlines": "^0.1.1",
+    "mozu-node-sdk": "^2.15.7",
+    "typescript": "^4.3.5"
+  },
+  "lint-staged": {
+    "lib/*": "prettier --write ."
   }
 }

@@ -1,24 +1,30 @@
-import path from "path";
+import path from 'path';
 
-import { createJsonLFileStream, createAppsClientMozu } from "./utilites";
+import {
+  createJsonLFileStream,
+  createAppsClientMozu,
+  createJsonLFileWriteStream,
+} from './utilites';
 
-import nconf from "nconf";
+import nconf from 'nconf';
 
 nconf.argv();
 
-const documentData = nconf.get("import") || nconf.get("clean");
-
 var appsClient = createAppsClientMozu();
 
-var document = require("mozu-node-sdk/clients/content/documentlists/document")(
+var document = require('mozu-node-sdk/clients/content/documentlists/document')(
   appsClient
 );
+var documentTree =
+  require('mozu-node-sdk/clients/content/documentlists/documentTree')(
+    appsClient
+  );
 
-const filePath = path.join(__dirname, "../");
-
-const dataFilePath = filePath + documentData;
-
-let dataStream = createJsonLFileStream(dataFilePath);
+const dataFilePath = require('path').join(
+  nconf.get('data') || './data',
+  'documents.jsonl'
+);
+const doclists = (nconf.get('doclists') || '').split(',');
 
 //function for creating documentType
 const generateDocument = async (documentData) => {
@@ -29,13 +35,12 @@ const generateDocument = async (documentData) => {
       },
       { body: documentData }
     );
-    console.log("Successfully created documentData");
   } catch (error) {
     console.error(
-      "Error in creating documentData",
+      'Error in creating documentData',
       error.originalError.message
     );
-    if (error.originalError.statusCode === 409 && nconf.get("upsert")) {
+    if (error.originalError.statusCode === 409 && nconf.get('upsert')) {
       try {
         //before updating will fetch documentId
         const documentID = await fetchDocumentDetails(documentData);
@@ -46,10 +51,9 @@ const generateDocument = async (documentData) => {
           },
           { body: documentData }
         );
-        console.log("Updated documentData Successfully");
       } catch (updateError) {
         console.error(
-          "Error while updating documentData",
+          'Error while updating documentData',
           updateError.originalError.message
         );
       }
@@ -63,10 +67,9 @@ const deleteDocuments = async (documentListData) => {
     await document.deleteDocument({
       documentListName: documentListData.listFQN,
     });
-    console.log("Deleted Document successfully");
   } catch (deleteError) {
     console.error(
-      "Error while cleaning , deleting document",
+      'Error while cleaning , deleting document',
       deleteError.originalError.message
     );
   }
@@ -79,26 +82,88 @@ const fetchDocumentDetails = async (documentData) => {
   });
   for (let documentDetails of result.items) {
     if (documentData.name === documentDetails.name) {
-      console.log("documentId for updation", documentDetails.id);
       return documentDetails.id;
     } else {
-      console.log("Didnt find documentId required for updation");
+      console.log('Didnt find documentId required for updation');
     }
   }
 };
 
 //processing data to create Document
-if (nconf.get("import")) {
+if (nconf.get('import')) {
   (async function () {
+    let dataStream = createJsonLFileStream(dataFilePath);
     for await (let documentData of dataStream) {
       await generateDocument(documentData);
     }
   })();
-} else if (nconf.get("clean")) {
+} else if (nconf.get('clean')) {
   //document will be deleted
   (async function () {
+    let dataStream = createJsonLFileStream(dataFilePath);
     for await (let documentData of dataStream) {
       await deleteDocuments(documentData);
     }
   })();
 }
+
+async function* exportDocs() {
+  for (const documentListName of doclists) {
+    try {
+      while (true) {
+        let page = 0;
+
+        let ret = await document.getDocuments({
+          startIndex: page * 200,
+          documentListName: documentListName,
+          pageSize: 200,
+        });
+        for (const item of ret.items) {
+          yield item;
+        }
+        page++;
+        if (ret.pageCount <= page) {
+          break;
+        }
+      }
+    } catch (error) {
+      console.log(
+        `Error while exporting doclist ${documentListName}`,
+        error.originalError.message
+      );
+    }
+  }
+}
+
+export async function deleteAllDocuments() {
+  for await (let item of exportDocs()) {
+    await deleteDocuments(item);
+  }
+}
+export async function importAllDocuments() {
+  let dataStream = createJsonLFileStream(dataFilePath);
+  for await (let documentTypeData of dataStream) {
+    await generateDocument(documentTypeData);
+  }
+}
+export async function exportAllDocuments() {
+  const stream = createJsonLFileWriteStream(dataFilePath);
+  for await (let item of exportDocs()) {
+    ['auditInfo'].forEach((key) => delete item[key]);
+    await stream.write(item);
+  }
+}
+
+(async function () {
+  if (nconf.get('clean')) {
+    await deleteAllDocuments();
+  }
+
+  if (nconf.get('import')) {
+    await importAllDocuments();
+  }
+
+  if (nconf.get('export')) {
+    await exportAllDocuments();
+  }
+})();

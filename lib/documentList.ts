@@ -1,45 +1,46 @@
-import path from "path";
+import path from 'path';
 
-import { createJsonLFileStream, createAppsClientMozu } from "./utilites";
+import {
+  createJsonLFileStream,
+  createAppsClientMozu,
+  createJsonLFileWriteStream,
+} from './utilites';
 
-import nconf from "nconf";
+import nconf from 'nconf';
 
 nconf.argv();
 
-const documentListData = nconf.get("import") || nconf.get("clean");
-
 var appsClient = createAppsClientMozu();
 
-var documentList = require("mozu-node-sdk/clients/content/documentList")(
+var documentList = require('mozu-node-sdk/clients/content/documentList')(
   appsClient
 );
 
-const filePath = path.join(__dirname, "../");
+const dataFilePath = require('path').join(
+  nconf.get('data') || './data',
+  'document-lists.jsonl'
+);
 
-const dataFilePath = filePath + documentListData;
-
-let dataStream = createJsonLFileStream(dataFilePath);
+require('path').join(nconf.get('data') || './data', 'document-lists.jsonl');
 
 //function for creating documentType
-const generateDocumentList = async (documentListData) => {
+const createDocumentList = async (documentListData) => {
   try {
     await documentList.createDocumentList(documentListData);
-    console.log("Successfully created documentList");
   } catch (error) {
     console.error(
-      "Error in creating DocumentList",
+      'Error in creating DocumentList',
       error.originalError.message
     );
-    if (error.originalError.statusCode === 500 && nconf.get("upsert")) {
+    if (error.originalError.statusCode === 500 && nconf.get('upsert')) {
       try {
         await documentList.updateDocumentList(
           { documentListName: documentListData.listFQN },
           documentListData
         );
-        console.log("Updated DocumentList Successfully");
       } catch (updateError) {
         console.error(
-          "Error while updating documentlist",
+          'Error while updating documentlist',
           updateError.originalError.message
         );
       }
@@ -53,27 +54,68 @@ const deleteDocumentList = async (documentListData) => {
     await documentList.deleteDocumentList({
       documentListName: documentListData.listFQN,
     });
-    console.log("Successfully deleted DocumentList");
   } catch (deleteError) {
     console.error(
-      "Error while cleaning , deleting document",
+      'Error while cleaning , deleting document',
       deleteError.originalError.message
     );
   }
 };
 
-//processing data to create DocumentType
-if (nconf.get("import")) {
-  (async function () {
-    for await (let documentListData of dataStream) {
-      await generateDocumentList(documentListData);
+async function* exportDocLists() {
+  let page = 0;
+  while (true) {
+    let ret = await documentList.getDocumentLists({
+      startIndex: page * 200,
+      pageSize: 200,
+    });
+    for (const item of ret.items) {
+      yield item;
     }
-  })();
-} else if (nconf.get("clean")) {
-  //document will be deleted
-  (async function () {
-    for await (let documentListData of dataStream) {
-      await deleteDocumentList(documentListData);
+    page++;
+    if (ret.pageCount <= page) {
+      break;
     }
-  })();
+  }
 }
+
+export async function deleteAllDocumentLists() {
+  for await (let item of exportDocLists()) {
+    await deleteDocumentList(item);
+  }
+}
+export async function importAllDocumentLists() {
+  let dataStream = createJsonLFileStream(dataFilePath);
+  for await (let item of dataStream) {
+    if (item.scopeType === 'Tenant') {
+      item.scopeId = parseInt(documentList.context.tenant);
+    }
+    await createDocumentList(item);
+  }
+}
+export async function exportAllDocumentLists() {
+  const stream = createJsonLFileWriteStream(dataFilePath);
+  for await (let item of exportDocLists()) {
+    if (item.namespace === 'mozu') {
+      continue;
+    }
+
+    ['auditInfo'].forEach((key) => delete item[key]);
+
+    await stream.write(item);
+  }
+}
+
+(async function () {
+  if (nconf.get('clean')) {
+    await deleteAllDocumentLists();
+  }
+
+  if (nconf.get('import')) {
+    await importAllDocumentLists();
+  }
+
+  if (nconf.get('export')) {
+    await exportAllDocumentLists();
+  }
+})();
