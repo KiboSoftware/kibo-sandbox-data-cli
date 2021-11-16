@@ -100,14 +100,3 @@ export async function exportAllProductAttributes() {
     await stream.write(item);
   }
 }
-(async function () {
-  if (nconf.get('import')) {
-    await importAllProductAttributes();
-  }
-  if (nconf.get('clean')) {
-    await deleteAllProductAttributes();
-  }
-  if (nconf.get('export')) {
-    await exportAllProductAttributes();
-  }
-})();

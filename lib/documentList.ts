@@ -105,17 +105,3 @@ export async function exportAllDocumentLists() {
     await stream.write(item);
   }
 }
-
-(async function () {
-  if (nconf.get('clean')) {
-    await deleteAllDocumentLists();
-  }
-
-  if (nconf.get('import')) {
-    await importAllDocumentLists();
-  }
-
-  if (nconf.get('export')) {
-    await exportAllDocumentLists();
-  }
-})();

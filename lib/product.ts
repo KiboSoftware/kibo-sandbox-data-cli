@@ -217,22 +217,3 @@ export async function exportAllProducts() {
   spinner.stop(true);
   console.log('products exported');
 }
-
-(async function () {
-  if (nconf.get('clean')) {
-    console.log('cleaning products...');
-    await deleteAllProducts();
-    console.log('products cleaned');
-  }
-
-  if (nconf.get('import')) {
-    console.log('importing products...');
-    await importAllProducts();
-    await importAllProductVariations();
-    console.log('products imported');
-  }
-
-  if (nconf.get('export')) {
-    await exportAllProducts();
-  }
-})();

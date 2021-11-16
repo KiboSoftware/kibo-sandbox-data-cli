@@ -97,16 +97,3 @@ export async function exportAllProductTypes() {
     await stream.write(item);
   }
 }
-(async function () {
-  if (nconf.get('clean')) {
-    await deleteAllProductTypes();
-  }
-
-  if (nconf.get('import')) {
-    await importAllProductTypes();
-  }
-
-  if (nconf.get('export')) {
-    await exportAllProductTypes();
-  }
-})();

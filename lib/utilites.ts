@@ -28,7 +28,7 @@ function createFilesDirIfNotExists(filename) {
 
 //function for creating appclient for mozunodesdk
 
-export function createAppsClientMozu() {
+export function createAppsClientMozu(validate: boolean = false) {
   var appClient = require('mozu-node-sdk/clients/platform/application')({
     context: {
       appKey: process.env.KIBO_CLIENT_ID,
@@ -41,5 +41,16 @@ export function createAppsClientMozu() {
     },
     //plugins: [FiddlerProxy({ url: 'http://localhost:8866' })]
   });
+  if (validate) {
+    if (!appClient.context.tenant) {
+      throw new Error('missing env var "KIBO_TENANT"');
+    }
+    if (!appClient.context.appKey) {
+      throw new Error('missing env var "KIBO_CLIENT_ID"');
+    }
+    if (!appClient.context.sharedSecret) {
+      throw new Error('missing env var "KIBO_SHARED_SECRET"');
+    }
+  }
   return appClient;
 }

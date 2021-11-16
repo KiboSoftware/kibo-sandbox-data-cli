@@ -1,26 +1,23 @@
 {
-  "name": "commerce-test-data",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
-  "directories": {
-    "lib": "lib"
+  "name": "@kibocommerce/kibo-sandbox-data-cli",
+  "version": "1.0.7",
+  "description": "kibo sandbox data cli",
+  "bin": {
+    "kibo-sandbox-data": "./bin/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "export:documents": "npm run build && node dist/document.js --export --doclists banners,hero_images,content_blocks ",
-    "export:all": "npm run build && node dist/index.js --export:all ",
-    "import:all": "npm run build && node dist/index.js --import:all ",
     "pretier": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "kibo software",
+  "license": "Apache-2.0",
   "devDependencies": {
-    "@types/node": "^16.7.1",
     "husky": "^7.0.4",
     "lint-staged": "^11.2.6",
-    "nconf": "^0.11.3",
     "prettier": "2.4.1"
   },
   "dependencies": {
@@ -29,7 +26,10 @@
     "dotenv": "^10.0.0",
     "jsonlines": "^0.1.1",
     "mozu-node-sdk": "^2.15.7",
-    "typescript": "^4.3.5"
+    "ncp": "^2.0.0",
+    "typescript": "^4.3.5",
+    "nconf": "^0.11.3",
+    "@types/node": "^16.7.1"
   },
   "lint-staged": {
     "lib/*": "prettier --write ."

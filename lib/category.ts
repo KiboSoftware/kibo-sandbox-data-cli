@@ -151,22 +151,3 @@ export async function deleteCategories() {
     await deleteCategory(categoryDetail);
   }
 }
-
-(async function () {
-  //hack till we refactor
-  if (process.argv.some((x) => x.indexOf('product.js') > -1)) {
-    return;
-  }
-
-  if (nconf.get('clean')) {
-    await deleteCategories();
-  }
-
-  if (nconf.get('import')) {
-    await importCategories();
-  }
-
-  if (nconf.get('export')) {
-    await exportCategories();
-  }
-})();

@@ -24,7 +24,7 @@ const dataFilePath = require('path').join(
   nconf.get('data') || './data',
   'documents.jsonl'
 );
-const doclists = (nconf.get('doclists') || '').split(',');
+const doclists = (nconf.get('documents') || '').split(',');
 
 //function for creating documentType
 const generateDocument = async (documentData) => {
@@ -153,17 +153,3 @@ export async function exportAllDocuments() {
     await stream.write(item);
   }
 }
-
-(async function () {
-  if (nconf.get('clean')) {
-    await deleteAllDocuments();
-  }
-
-  if (nconf.get('import')) {
-    await importAllDocuments();
-  }
-
-  if (nconf.get('export')) {
-    await exportAllDocuments();
-  }
-})();

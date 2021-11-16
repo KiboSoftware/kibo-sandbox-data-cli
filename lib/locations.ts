@@ -110,17 +110,3 @@ export async function deleteAllLocations() {
     await deleteLocation(locationDetail);
   }
 }
-
-(async function () {
-  if (nconf.get('clean')) {
-    await deleteAllLocations();
-  }
-
-  if (nconf.get('import')) {
-    await importAllLocations();
-  }
-
-  if (nconf.get('export')) {
-    await exportAllLocations();
-  }
-})();

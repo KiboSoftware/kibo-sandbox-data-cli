@@ -96,17 +96,3 @@ export async function exportAllDiscounts() {
     await stream.write(item);
   }
 }
-
-(async function () {
-  if (nconf.get('clean')) {
-    await deleteAllDiscounts();
-  }
-
-  if (nconf.get('import')) {
-    await importAllDiscounts();
-  }
-
-  if (nconf.get('export')) {
-    await exportAllDiscounts();
-  }
-})();

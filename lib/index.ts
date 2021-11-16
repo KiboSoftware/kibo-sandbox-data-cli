@@ -43,9 +43,9 @@ import {
   importAllDocuments,
   exportAllDocuments,
 } from './document';
+import { fstat, existsSync } from 'fs';
 
-const nconf = require('nconf');
-
+var ncp = require('ncp').ncp;
 const taskReducer = (result, fn) => result.then(fn);
 
 const deleteAllData = () => {
@@ -96,13 +96,47 @@ const exportAllData = () => {
 const deleteAndImport = () =>
   [deleteAllData, importAllData].reduce(taskReducer, Promise.resolve());
 
-if (nconf.get('all:export')) {
-  exportAllData().then(() => console.log('--The project data is exported--'));
-}
-if (nconf.get('all:clean')) {
-  deleteAllData().then(() => console.log('--The project data is deleted--'));
-} else if (nconf.get('all:import')) {
-  importAllData().then(() => console.log('--All data is imported--'));
-} else if (nconf.get('start')) {
-  deleteAndImport().then(() => console.log('--All data is imported--'));
-}
+const initDataDir = (cfg) => {
+  console.log(__dirname);
+  const dataDir = require('path').join(__dirname, '..', 'data');
+  ncp(dataDir, cfg.data, function (err) {
+    if (err) {
+      return console.error(err);
+    }
+    console.log(`inited data dir ${cfg.data}!`);
+  });
+};
+export {
+  initDataDir,
+  importAllData,
+  exportAllData,
+  deleteAllData,
+  deleteAndImport,
+  deleteAllProducts,
+  deleteCategories,
+  deleteAllProductAttributes,
+  deleteAllProductTypes,
+  deleteAllLocations,
+  deleteAllDiscounts,
+  deleteAllDocuments,
+  deleteAllDocumentLists,
+  deleteAllDocumentTypes,
+  importCategories,
+  importAllProducts,
+  importAllProductAttributes,
+  importAllProductTypes,
+  importAllLocations,
+  importAllDiscounts,
+  importAllDocumentTypes,
+  importAllDocumentLists,
+  importAllDocuments,
+  exportCategories,
+  exportAllProducts,
+  exportAllProductAttributes,
+  exportAllProductTypes,
+  exportAllLocations,
+  exportAllDiscounts,
+  exportAllDocumentTypes,
+  exportAllDocumentLists,
+  exportAllDocuments,
+};

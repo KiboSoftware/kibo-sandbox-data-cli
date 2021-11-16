@@ -81,17 +81,3 @@ export async function exportAllDocumentTypes() {
     await stream.write(item);
   }
 }
-
-(async function () {
-  if (nconf.get('clean')) {
-    await deleteAllDocumentTypes();
-  }
-
-  if (nconf.get('import')) {
-    await importAllDocumentTypes();
-  }
-
-  if (nconf.get('export')) {
-    await exportAllDocumentTypes();
-  }
-})();
