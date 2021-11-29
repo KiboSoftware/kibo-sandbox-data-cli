@@ -1,12 +1,13 @@
 {
   "name": "@kibocommerce/kibo-sandbox-data-cli",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "kibo sandbox data cli",
   "bin": {
     "kibo-sandbox-data": "./bin/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "data"
   ],
   "scripts": {
     "pretier": "prettier --write .",
