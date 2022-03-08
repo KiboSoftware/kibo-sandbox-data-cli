@@ -112,7 +112,7 @@ export async function allCategories() {
 }
 
 export async function importCategories() {
-  var spinner = new Spinner('exporting categories.. %s');
+  var spinner = new Spinner('importing categories.. %s');
   spinner.start();
   let dataStream = createJsonLFileStream(dataFilePath);
   let catLookup = (await allCategories()).lookup;

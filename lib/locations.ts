@@ -17,6 +17,10 @@ const dataFilePath = require('path').join(
 
 var appsClient = createAppsClientMozu();
 
+var locationTypeMethods = require('mozu-node-sdk/clients/commerce/admin/locationType')(
+  appsClient
+);
+
 var locationMethods = require('mozu-node-sdk/clients/commerce/admin/location')(
   appsClient
 );
@@ -31,9 +35,19 @@ const setDirectShipLocationUsage = async (code) => {
   ds.locationCodes.push(code);
   await locationUsagesMethods.updateLocationUsage({ code: 'ds' }, { body: ds });
 };
-
+const locationTypes={};
 //function for creating location
 const generateLocation = async (locationData) => {
+  for( const locationType of locationData.locationTypes ||[]){
+    if(!locationTypes[locationType.code]){
+      locationTypes[locationType.code] = true;
+      try{
+        await locationTypeMethods.addLocationType (locationType)
+      }
+      catch(error){
+      }
+    }
+  }
   try {
     await locationMethods.addLocation(locationData);
     console.log('Successfully added location');

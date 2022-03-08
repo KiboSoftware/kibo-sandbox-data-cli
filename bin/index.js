@@ -1,7 +1,5 @@
 #! /usr/bin/env node
 const createAppsClientMozu = require('../dist/utilites').createAppsClientMozu;
-validateCfg();
-const app = require('../dist/index');
 const fs = require('fs');
 const args = require('yargs/yargs')(process.argv.slice(2))
   .option('all', {
@@ -99,14 +97,14 @@ function validateCfg() {
 }
 function initEnv(argv) {
   const template = `KIBO_CLIENT_ID=
-  KIBO_SHARED_SECRET=
-  KIBO_API_BASE_URL=https://home.mozu.com
-  KIBO_TENANT=
-  KIBO_SITE_ID=
-  KIBO_MASTER_CATALOG_ID=1
-  KIBO_CATALOG_ID=1`;
+KIBO_SHARED_SECRET=
+KIBO_API_BASE_URL=https://home.mozu.com
+KIBO_TENANT=
+KIBO_SITE_ID=
+KIBO_MASTER_CATALOG_ID=1
+KIBO_CATALOG_ID=1`;
   fs.writeFileSync('.env', template);
-  console.writeline('update the .env file?');
+  console.log('update the .env file');
 }
 function validatePath(cfg) {
   if (!fs.existsSync(cfg.data)) {
@@ -115,7 +113,9 @@ function validatePath(cfg) {
   }
 }
 
-async function importData(argv) {
+async function importData(argv) {  
+  validateCfg();
+  const app = require('../dist/index');  
   validatePath(argv);
   if (argv.all) {
     await app.importAllData(argv);
@@ -149,6 +149,8 @@ async function importData(argv) {
   }
 }
 async function exportData(argv) {
+  validateCfg();
+  const app = require('../dist/index');
   if (argv.all) {
     app.exportAllData(argv);
   }
@@ -182,6 +184,8 @@ async function exportData(argv) {
   }
 }
 async function clearData(argv) {
+  validateCfg();
+  const app = require('../dist/index'); 
   if (argv.all) {
     app.deleteAllData(argv);
   }
