@@ -113,9 +113,9 @@ function validatePath(cfg) {
   }
 }
 
-async function importData(argv) {  
+async function importData(argv) {
   validateCfg();
-  const app = require('../dist/index');  
+  const app = require('../dist/index');
   validatePath(argv);
   if (argv.all) {
     await app.importAllData(argv);
@@ -185,7 +185,7 @@ async function exportData(argv) {
 }
 async function clearData(argv) {
   validateCfg();
-  const app = require('../dist/index'); 
+  const app = require('../dist/index');
   if (argv.all) {
     app.deleteAllData(argv);
   }

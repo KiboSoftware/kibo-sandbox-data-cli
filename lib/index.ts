@@ -125,7 +125,7 @@ export {
   importAllProductAttributes,
   importAllProductTypes,
   importCategories,
-  importAllProducts,  
+  importAllProducts,
   importAllDiscounts,
   importAllDocumentTypes,
   importAllDocumentLists,
