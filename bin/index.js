@@ -110,47 +110,35 @@ function validateCfg(envProfile) {
     process.exit(1);
   }
 }
-// function initEnv(argv) {
-//   const template = `
-// KIBO_CLIENT_ID=
-// KIBO_SHARED_SECRET=
-// KIBO_API_BASE_URL=https://home.mozu.com
-// KIBO_TENANT=
-// KIBO_SITE_ID=
-// KIBO_MASTER_CATALOG_ID=1
-// KIBO_CATALOG_ID=1`;
-//   fs.writeFileSync('.env', template);
-//   console.log('update the .env file');
-// }
 
 function initEnvYaml(argv) {
   const template = `
 ${profiles.IMPORT}: 
-  KIBO_CLIENT_ID:
-  KIBO_SHARED_SECRET:
-  KIBO_API_BASE_URL:https://home.mozu.com
-  KIBO_TENANT:
-  KIBO_SITE_ID:
-  KIBO_MASTER_CATALOG_ID:1
-  KIBO_CATALOG_ID:1
+  KIBO_CLIENT_ID: 
+  KIBO_SHARED_SECRET: 
+  KIBO_API_BASE_URL: https://home.mozu.com
+  KIBO_TENANT: 
+  KIBO_SITE_ID: 
+  KIBO_MASTER_CATALOG_ID: 1
+  KIBO_CATALOG_ID: 1
 
 ${profiles.EXPORT}:
-  KIBO_CLIENT_ID:
-  KIBO_SHARED_SECRET:
-  KIBO_API_BASE_URL:https://home.mozu.com
-  KIBO_TENANT:
-  KIBO_SITE_ID:
-  KIBO_MASTER_CATALOG_ID:1
-  KIBO_CATALOG_ID:1
+  KIBO_CLIENT_ID: 
+  KIBO_SHARED_SECRET: 
+  KIBO_API_BASE_URL: https://home.mozu.com
+  KIBO_TENANT: 
+  KIBO_SITE_ID: 
+  KIBO_MASTER_CATALOG_ID: 1
+  KIBO_CATALOG_ID: 1
 
 ${profiles.DELETE}:
-  KIBO_CLIENT_ID:
-  KIBO_SHARED_SECRET:
-  KIBO_API_BASE_URL:https://home.mozu.com
-  KIBO_TENANT:
-  KIBO_SITE_ID:
-  KIBO_MASTER_CATALOG_ID:1
-  KIBO_CATALOG_ID:1
+  KIBO_CLIENT_ID: 
+  KIBO_SHARED_SECRET: 
+  KIBO_API_BASE_URL: https://home.mozu.com
+  KIBO_TENANT: 
+  KIBO_SITE_ID: 
+  KIBO_MASTER_CATALOG_ID: 1
+  KIBO_CATALOG_ID: 1
 `;
   fs.writeFileSync('.env.yaml', template);
   console.log('update the .env.yaml file');
