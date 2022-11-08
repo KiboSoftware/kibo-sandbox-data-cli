@@ -1,0 +1,4 @@
+{"locationGroupId":1,"locationGroupCode":"DCS","siteIds":[57454],"name":"Distribution Centers","locationCodes":["KCDC","EARTHCITYDC","EDIS"]}
+{"locationGroupId":2,"locationGroupCode":"DRP","siteIds":[57454],"name":"Drop Shippers","locationCodes":["BATONROUGE"]}
+{"locationGroupId":3,"locationGroupCode":"3PL","siteIds":[57454],"name":"3PL","locationCodes":["LAWRENCEDC"]}
+{"locationGroupId":4,"locationGroupCode":"RET","siteIds":[57454],"name":"Retail Stores","locationCodes":["ALB","ATLANTA","BALTIMORE","BOISE","BOULDER","BOZEMAN","BRONX","BROOKLYN","CAMBRIDGE","CHARLESTON","CHARLOTTE","CHERRYCREEK","CHESTNUT","CHEYENNE","CINCINNATI","CLEVELAND","COLSPRINGS","CROWNCENTER","DESMOINES","DETROIT"]}

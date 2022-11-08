@@ -1,25 +1,27 @@
 import path from 'path';
 var Spinner = require('cli-spinner').Spinner;
 
-import {
-  createJsonLFileStream,
-  createAppsClientMozu,
-  createJsonLFileWriteStream,
-} from './utilites';
+import { createJsonLFileStream, createJsonLFileWriteStream } from './utilites';
+import { createAppsClientMozu } from './profile';
 
 import nconf from 'nconf';
 
 nconf.argv();
 
-var appsClient = createAppsClientMozu();
-
-var categoryMethod =
-  require('mozu-node-sdk/clients/commerce/catalog/admin/category')(appsClient);
-
 const dataFilePath = require('path').join(
   nconf.get('data') || './data',
   'categories.jsonl'
 );
+
+let appsClient, categoryMethod;
+function initClients() {
+  appsClient = createAppsClientMozu();
+
+  categoryMethod =
+    require('mozu-node-sdk/clients/commerce/catalog/admin/category')(
+      appsClient
+    );
+}
 
 //function for creating discount
 const generateCategory = async (categoryData) => {
@@ -68,6 +70,7 @@ const deleteCategory = async (categoryData) => {
 };
 
 export async function allCategories() {
+  initClients();
   let page = 0;
   let cats = [];
   const catHash = {};
@@ -114,6 +117,7 @@ export async function allCategories() {
 export async function importCategories() {
   var spinner = new Spinner('importing categories.. %s');
   spinner.start();
+  initClients();
   let dataStream = createJsonLFileStream(dataFilePath);
   let catLookup = (await allCategories()).lookup;
   for await (let categoryDetail of dataStream) {
@@ -130,6 +134,7 @@ export async function importCategories() {
 export async function exportCategories() {
   var spinner = new Spinner('exporting categories.. %s');
   spinner.start();
+  initClients();
   const allCats = (await allCategories()).list;
   const stream = createJsonLFileWriteStream(dataFilePath);
 
@@ -146,6 +151,7 @@ export async function exportCategories() {
 }
 
 export async function deleteCategories() {
+  initClients();
   const allCats = (await allCategories()).list.reverse();
   for await (let categoryDetail of allCats) {
     await deleteCategory(categoryDetail);

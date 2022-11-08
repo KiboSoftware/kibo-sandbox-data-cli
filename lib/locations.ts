@@ -1,30 +1,31 @@
 import path from 'path';
 
-import {
-  createJsonLFileStream,
-  createAppsClientMozu,
-  createJsonLFileWriteStream,
-} from './utilites';
+import { createJsonLFileStream, createJsonLFileWriteStream } from './utilites';
+import { createAppsClientMozu } from './profile';
 
 import nconf from 'nconf';
 
 nconf.argv();
 
-const dataFilePath = require('path').join(
+const dataFilePath = path.join(
   nconf.get('data') || './data',
   'locations.jsonl'
 );
+let appsClient, locationTypeMethods, locationMethods, locationUsagesMethods;
+function initClients() {
+  appsClient = createAppsClientMozu();
 
-var appsClient = createAppsClientMozu();
+  locationTypeMethods =
+    require('mozu-node-sdk/clients/commerce/admin/locationType')(appsClient);
 
-var locationTypeMethods =
-  require('mozu-node-sdk/clients/commerce/admin/locationType')(appsClient);
-
-var locationMethods = require('mozu-node-sdk/clients/commerce/admin/location')(
-  appsClient
-);
-var locationUsagesMethods =
-  require('mozu-node-sdk/clients/commerce/settings/locationUsage')(appsClient);
+  locationMethods = require('mozu-node-sdk/clients/commerce/admin/location')(
+    appsClient
+  );
+  locationUsagesMethods =
+    require('mozu-node-sdk/clients/commerce/settings/locationUsage')(
+      appsClient
+    );
+}
 
 const setDirectShipLocationUsage = async (code) => {
   var ds = await locationUsagesMethods.getLocationUsage({ code: 'ds' });
@@ -100,6 +101,7 @@ async function* exportLocations() {
 }
 
 export async function exportAllLocations() {
+  initClients();
   const stream = createJsonLFileWriteStream(dataFilePath);
   for await (let item of exportLocations()) {
     ['auditInfo'].forEach((key) => delete item[key]);
@@ -107,6 +109,7 @@ export async function exportAllLocations() {
   }
 }
 export async function importAllLocations() {
+  initClients();
   let dataStream = createJsonLFileStream(dataFilePath);
   for await (let locationDetail of dataStream) {
     await generateLocation(locationDetail);
@@ -116,6 +119,7 @@ export async function importAllLocations() {
   }
 }
 export async function deleteAllLocations() {
+  initClients();
   let dataStream = createJsonLFileStream(dataFilePath);
   for await (let locationDetail of dataStream) {
     await deleteLocation(locationDetail);

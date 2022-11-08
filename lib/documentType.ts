@@ -1,25 +1,23 @@
 import path from 'path';
 
-import {
-  createJsonLFileStream,
-  createAppsClientMozu,
-  createJsonLFileWriteStream,
-} from './utilites';
+import { createJsonLFileStream, createJsonLFileWriteStream } from './utilites';
+import { createAppsClientMozu } from './profile';
 
 import nconf from 'nconf';
 
 nconf.argv();
-
-var appsClient = createAppsClientMozu();
-
-var documentType = require('mozu-node-sdk/clients/content/documentType')(
-  appsClient
-);
-
 const dataFilePath = require('path').join(
   nconf.get('data') || './data',
   'document-types.jsonl'
 );
+let appsClient, documentType;
+function initClients() {
+  appsClient = createAppsClientMozu();
+
+  documentType = require('mozu-node-sdk/clients/content/documentType')(
+    appsClient
+  );
+}
 
 //function for creating documentType
 const createDocumentType = async (documentTypeData) => {
@@ -66,12 +64,14 @@ export async function deleteAllDocumentTypes() {
   //na
 }
 export async function importAllDocumentTypes() {
+  initClients();
   let dataStream = createJsonLFileStream(dataFilePath);
   for await (let documentTypeData of dataStream) {
     await createDocumentType(documentTypeData);
   }
 }
 export async function exportAllDocumentTypes() {
+  initClients();
   const stream = createJsonLFileWriteStream(dataFilePath);
   for await (let item of exportDocTypes()) {
     ['auditInfo'].forEach((key) => delete item[key]);
