@@ -15,11 +15,9 @@ const dataFilePath = require('path').join(
 let appsClient, channelClient;
 
 function initClients() {
-  var appsClient = createAppsClientMozu();
+  appsClient = createAppsClientMozu();
 
-  var channelClient = require('mozu-node-sdk/clients/commerce/channel')(
-    appsClient
-  );
+  channelClient = require('mozu-node-sdk/clients/commerce/channel')(appsClient);
 }
 const generateChannels = async (channel) => {
   try {

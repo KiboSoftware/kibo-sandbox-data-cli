@@ -16,16 +16,28 @@ npm i -g @kibocommerce/kibo-sandbox-data-cli
 kibo-sandbox-data initEnv
 ```
 
-- populate the .env file with the corresponding values for your tenant and app
+- populate the .env.yaml file with the corresponding values for your tenant and app for your target
+- Configuration under `export` or `import` will be the target Kibo environment when running a command `export` or `import`. When running the `sync` command, the environment under `export` is your source and the environment under `import` is the destination
+-
 
 ```
-KIBO_CLIENT_ID=******************
-KIBO_SHARED_SECRET=*************
-KIBO_API_BASE_URL=https://home.mozu.com
-KIBO_TENANT=******
-KIBO_SITE_ID=****
-KIBO_MASTER_CATALOG_ID=1
-KIBO_CATALOG_ID=1
+export:
+  KIBO_CLIENT_ID: ******************
+  KIBO_SHARED_SECRET: *************
+  KIBO_API_BASE_URL: https://home.mozu.com
+  KIBO_TENANT: ******
+  KIBO_SITE_ID: ****
+  KIBO_MASTER_CATALOG_ID: 1
+  KIBO_CATALOG_ID: 1
+
+import:
+  KIBO_CLIENT_ID: ******************
+  KIBO_SHARED_SECRET: *************
+  KIBO_API_BASE_URL: https://home.mozu.com
+  KIBO_TENANT: ******
+  KIBO_SITE_ID: ****
+  KIBO_MASTER_CATALOG_ID: 1
+  KIBO_CATALOG_ID: 1
 ```
 
 ### init a data directory ( if you dont already have one)
@@ -52,6 +64,12 @@ kibo-sandbox-data import --all
 
 ```
 kibo-sandbox-data import --categories
+```
+
+### sync all
+
+```
+kibo-sandbox-data sync --all
 ```
 
 ### export products and locations

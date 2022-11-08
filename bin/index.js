@@ -1,8 +1,13 @@
 #! /usr/bin/env node
-const createAppsClientMozu = require('../dist/utilites').createAppsClientMozu;
+const createAppsClientMozu = require('../dist/profile').createAppsClientMozu;
 const yenv = require('yenv');
 const fs = require('fs');
 const path = require('path');
+const profiles = {
+  IMPORT: 'import',
+  EXPORT: 'export',
+  DELETE: 'clear',
+};
 const app = require('../dist/index');
 const args = require('yargs/yargs')(process.argv.slice(2))
   .option('all', {
@@ -117,11 +122,6 @@ function validateCfg(envProfile) {
 //   fs.writeFileSync('.env', template);
 //   console.log('update the .env file');
 // }
-const profiles = {
-  IMPORT: 'import',
-  EXPORT: 'export',
-  DELETE: 'clear',
-};
 
 function initEnvYaml(argv) {
   const template = `

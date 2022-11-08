@@ -94,18 +94,18 @@ const importAllData = () => {
   console.log('--Importing all data--');
   return [
     importAllChannels,
+    importAllCatalogByAPI,
     importAllLocations,
     importAllLocationGroups,
     importAllLocationGroupConfigurations,
     importGeneralSettings,
     importAllCarrierConfigurations,
-    importAllCatalogByAPI,
+    importAllInventory,
+    importOrderRouting,
     importAllDiscounts,
     importAllDocumentTypes,
     importAllDocumentLists,
     importAllDocuments,
-    importAllInventory,
-    importOrderRouting,
   ].reduce(taskReducer, Promise.resolve());
 };
 
@@ -121,11 +121,11 @@ const exportAllData = () => {
     exportAllLocationGroups,
     exportAllLocationGroupConfigurations,
     exportAllCarrierConfigurations,
+    exportAllInventory,
+    exportOrderRouting,
     exportAllDocumentTypes,
     exportAllDocumentLists,
     exportAllDocuments,
-    exportAllInventory,
-    exportOrderRouting,
   ].reduce(taskReducer, Promise.resolve());
 };
 

@@ -5,7 +5,7 @@ _.log
 npm-debug.log_
 
 dist
-
+.env.yaml
 # Runtime data
 
 pids

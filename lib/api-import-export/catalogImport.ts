@@ -116,7 +116,6 @@ async function generateResourceFile(
   try {
     const resourceFilePath = path.join(importDir, fileName);
     createFilesDirIfNotExists(resourceFilePath);
-    console.log(fileName);
     const transformCatalogName = (row: any): any => {
       if (row[constants.HEADERS.MASTER_CATALOG]) {
         row[constants.HEADERS.MASTER_CATALOG] = masterCatalogName;
