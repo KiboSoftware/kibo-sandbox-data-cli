@@ -1,27 +1,25 @@
 import path from 'path';
 
-import {
-  createJsonLFileStream,
-  createAppsClientMozu,
-  createJsonLFileWriteStream,
-} from './utilites';
+import { createJsonLFileStream, createJsonLFileWriteStream } from './utilites';
+import { createAppsClientMozu } from './profile';
 
 import nconf from 'nconf';
 
 nconf.argv();
-
-var appsClient = createAppsClientMozu();
-
-var documentList = require('mozu-node-sdk/clients/content/documentList')(
-  appsClient
-);
-
 const dataFilePath = require('path').join(
   nconf.get('data') || './data',
   'document-lists.jsonl'
 );
 
-require('path').join(nconf.get('data') || './data', 'document-lists.jsonl');
+let appsClient, documentList;
+
+function initClients() {
+  appsClient = createAppsClientMozu();
+
+  documentList = require('mozu-node-sdk/clients/content/documentList')(
+    appsClient
+  );
+}
 
 //function for creating documentType
 const createDocumentList = async (documentListData) => {
@@ -80,11 +78,13 @@ async function* exportDocLists() {
 }
 
 export async function deleteAllDocumentLists() {
+  initClients();
   for await (let item of exportDocLists()) {
     await deleteDocumentList(item);
   }
 }
 export async function importAllDocumentLists() {
+  initClients();
   let dataStream = createJsonLFileStream(dataFilePath);
   for await (let item of dataStream) {
     if (item.scopeType === 'Tenant') {
@@ -94,6 +94,7 @@ export async function importAllDocumentLists() {
   }
 }
 export async function exportAllDocumentLists() {
+  initClients();
   const stream = createJsonLFileWriteStream(dataFilePath);
   for await (let item of exportDocLists()) {
     if (item.namespace === 'mozu') {

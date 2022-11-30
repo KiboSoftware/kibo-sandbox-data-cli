@@ -1,26 +1,25 @@
 import path from 'path';
 
-import {
-  createJsonLFileStream,
-  createAppsClientMozu,
-  createJsonLFileWriteStream,
-} from './utilites';
+import { createJsonLFileStream, createJsonLFileWriteStream } from './utilites';
+import { createAppsClientMozu } from './profile';
 
 import nconf from 'nconf';
 
 nconf.argv();
 
-var appsClient = createAppsClientMozu();
-
-var productTypeMethods =
-  require('mozu-node-sdk/clients/commerce/catalog/admin/attributedefinition/productType')(
-    appsClient
-  );
-
-const dataFilePath = require('path').join(
+const dataFilePath = path.join(
   nconf.get('data') || './data',
   'product-types.jsonl'
 );
+let appsClient, productTypeMethods;
+function initClients() {
+  appsClient = createAppsClientMozu();
+
+  productTypeMethods =
+    require('mozu-node-sdk/clients/commerce/catalog/admin/attributedefinition/productType')(
+      appsClient
+    );
+}
 
 //function for creating productType
 const generateProductType = async (productTypeData) => {
@@ -79,18 +78,21 @@ async function* exportProductTypes() {
 }
 
 export async function deleteAllProductTypes() {
+  initClients();
   let dataStream = createJsonLFileStream(dataFilePath);
   for await (let productTypeDetail of dataStream) {
     await deleteProductType(productTypeDetail);
   }
 }
 export async function importAllProductTypes() {
+  initClients();
   let dataStream = createJsonLFileStream(dataFilePath);
   for await (let productTypeDetail of dataStream) {
     await generateProductType(productTypeDetail);
   }
 }
 export async function exportAllProductTypes() {
+  initClients();
   const stream = createJsonLFileWriteStream(dataFilePath);
   for await (let item of exportProductTypes()) {
     ['auditInfo'].forEach((key) => delete item[key]);

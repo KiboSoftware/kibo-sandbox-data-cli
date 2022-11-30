@@ -1,37 +1,34 @@
 import path from 'path';
 var Spinner = require('cli-spinner').Spinner;
 
-import {
-  createJsonLFileStream,
-  createAppsClientMozu,
-  createJsonLFileWriteStream,
-} from './utilites';
+import { createJsonLFileStream, createJsonLFileWriteStream } from './utilites';
+import { createAppsClientMozu } from './profile';
+
 import { allCategories } from './category';
 
 import nconf from 'nconf';
 
 nconf.argv();
 
-var appsClient = createAppsClientMozu();
-
-var product = require('mozu-node-sdk/clients/commerce/catalog/admin/product')(
-  appsClient
-);
-
-var productVariant =
-  require('mozu-node-sdk/clients/commerce/catalog/admin/products/productVariation')(
-    appsClient
-  );
-
-const dataFilePath = require('path').join(
-  nconf.get('data') || './data',
-  'products.jsonl'
-);
-const variationDataFilePath = require('path').join(
+const dataFilePath = path.join(nconf.get('data') || './data', 'products.jsonl');
+const variationDataFilePath = path.join(
   nconf.get('data') || './data',
   'product-variations.jsonl'
 );
 
+let appsClient, product, productVariant;
+function initClients() {
+  appsClient = createAppsClientMozu();
+
+  product = require('mozu-node-sdk/clients/commerce/catalog/admin/product')(
+    appsClient
+  );
+
+  productVariant =
+    require('mozu-node-sdk/clients/commerce/catalog/admin/products/productVariation')(
+      appsClient
+    );
+}
 //function for creating documentType
 const generateProduct = async (productData) => {
   try {
@@ -131,12 +128,14 @@ const deleteProduct = async (productData) => {
 };
 
 export async function deleteAllProducts() {
+  initClients();
   let dataStream = createJsonLFileStream(dataFilePath);
   for await (let productDetail of dataStream) {
     await deleteProduct(productDetail);
   }
 }
 export async function importAllProducts() {
+  initClients();
   let dataStream = createJsonLFileStream(dataFilePath);
   const cats = (await allCategories()).lookup;
   for await (let productDetail of dataStream) {
@@ -154,6 +153,7 @@ export async function importAllProducts() {
   }
 }
 export async function importAllProductVariations() {
+  initClients();
   let dataStream = createJsonLFileStream(variationDataFilePath);
   let set = [];
   let curPc = null;
@@ -171,6 +171,7 @@ export async function importAllProductVariations() {
   }
 }
 export async function exportAllProducts() {
+  initClients();
   var spinner = new Spinner('exporting products.. %s');
   spinner.start();
 

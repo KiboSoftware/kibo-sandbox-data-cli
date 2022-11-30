@@ -1,24 +1,25 @@
 import path from 'path';
 
-import {
-  createJsonLFileStream,
-  createAppsClientMozu,
-  createJsonLFileWriteStream,
-} from './utilites';
+import { createJsonLFileStream, createJsonLFileWriteStream } from './utilites';
+import { createAppsClientMozu } from './profile';
 
 import nconf from 'nconf';
 
 nconf.argv();
 
-var appsClient = createAppsClientMozu();
-
-var discountMethod =
-  require('mozu-node-sdk/clients/commerce/catalog/admin/discount')(appsClient);
-
 const dataFilePath = require('path').join(
   nconf.get('data') || './data',
   'discounts.jsonl'
 );
+let appsClient, discountMethod;
+function initClients() {
+  appsClient = createAppsClientMozu();
+
+  discountMethod =
+    require('mozu-node-sdk/clients/commerce/catalog/admin/discount')(
+      appsClient
+    );
+}
 
 //function for creating discount
 const generateDiscount = async (discountData) => {
@@ -78,18 +79,21 @@ async function* exportItems() {
 }
 
 export async function deleteAllDiscounts() {
+  initClients();
   let dataStream = createJsonLFileStream(dataFilePath);
   for await (let item of dataStream) {
     await deleteDiscount(item);
   }
 }
 export async function importAllDiscounts() {
+  initClients();
   let dataStream = createJsonLFileStream(dataFilePath);
   for await (let item of dataStream) {
     await generateDiscount(item);
   }
 }
 export async function exportAllDiscounts() {
+  initClients();
   const stream = createJsonLFileWriteStream(dataFilePath);
   for await (let item of exportItems()) {
     ['auditInfo'].forEach((key) => delete item[key]);

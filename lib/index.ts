@@ -24,6 +24,30 @@ import {
   exportAllLocations,
 } from './locations';
 import {
+  importAllLocationGroupConfigurations,
+  exportAllLocationGroupConfigurations,
+} from './locationGroupConfiguration';
+import {
+  importAllLocationGroups,
+  exportAllLocationGroups,
+} from './locationGroups';
+import { importOrderRouting, exportOrderRouting } from './orderRouting';
+import {
+  importGeneralSettings,
+  exportGeneralSettings,
+} from './generalSettings';
+import {
+  importAllCarrierConfigurations,
+  exportAllCarrierConfigurations,
+} from './carrierConfiguration';
+import {
+  importAllInventory,
+  exportAllInventory,
+  seedInventory,
+} from './inventory';
+import { exportAllChannels, importAllChannels } from './channel';
+
+import {
   deleteAllDiscounts,
   importAllDiscounts,
   exportAllDiscounts,
@@ -43,7 +67,10 @@ import {
   importAllDocuments,
   exportAllDocuments,
 } from './document';
-import { fstat, existsSync } from 'fs';
+
+import { exportAllCatalogByAPI } from './api-import-export/catalogExport';
+import { importAllCatalogByAPI } from './api-import-export/catalogImport';
+import { activeProfile } from './profile';
 
 var ncp = require('ncp').ncp;
 const taskReducer = (result, fn) => result.then(fn);
@@ -66,11 +93,15 @@ const deleteAllData = () => {
 const importAllData = () => {
   console.log('--Importing all data--');
   return [
+    importAllChannels,
+    importAllCatalogByAPI,
     importAllLocations,
-    importAllProductAttributes,
-    importAllProductTypes,
-    importCategories,
-    importAllProducts,
+    importAllLocationGroups,
+    importAllLocationGroupConfigurations,
+    importGeneralSettings,
+    importAllCarrierConfigurations,
+    importAllInventory,
+    importOrderRouting,
     importAllDiscounts,
     importAllDocumentTypes,
     importAllDocumentLists,
@@ -80,13 +111,18 @@ const importAllData = () => {
 
 const exportAllData = () => {
   console.log('--exporting all data--');
+
   return [
-    exportCategories,
-    exportAllProducts,
-    exportAllProductAttributes,
-    exportAllProductTypes,
-    exportAllLocations,
+    exportAllCatalogByAPI,
+    exportAllChannels,
+    exportGeneralSettings,
     exportAllDiscounts,
+    exportAllLocations,
+    exportAllLocationGroups,
+    exportAllLocationGroupConfigurations,
+    exportAllCarrierConfigurations,
+    exportAllInventory,
+    exportOrderRouting,
     exportAllDocumentTypes,
     exportAllDocumentLists,
     exportAllDocuments,
@@ -106,7 +142,11 @@ const initDataDir = (cfg) => {
     console.log(`inited data dir ${cfg.data}!`);
   });
 };
+const setActiveProfile = (env) => {
+  activeProfile.set(env);
+};
 export {
+  setActiveProfile,
   initDataDir,
   importAllData,
   exportAllData,
@@ -121,7 +161,10 @@ export {
   deleteAllDocuments,
   deleteAllDocumentLists,
   deleteAllDocumentTypes,
+  importAllChannels,
   importAllLocations,
+  importAllLocationGroups,
+  importAllLocationGroupConfigurations,
   importAllProductAttributes,
   importAllProductTypes,
   importCategories,
@@ -130,13 +173,23 @@ export {
   importAllDocumentTypes,
   importAllDocumentLists,
   importAllDocuments,
+  importGeneralSettings,
+  importAllCarrierConfigurations,
+  importAllCatalogByAPI,
   exportCategories,
+  exportAllCatalogByAPI,
+  exportAllChannels,
   exportAllProducts,
   exportAllProductAttributes,
   exportAllProductTypes,
   exportAllLocations,
+  exportAllLocationGroups,
+  exportAllLocationGroupConfigurations,
   exportAllDiscounts,
   exportAllDocumentTypes,
   exportAllDocumentLists,
   exportAllDocuments,
+  exportAllInventory,
+  exportOrderRouting,
+  exportAllCarrierConfigurations,
 };

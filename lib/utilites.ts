@@ -1,8 +1,7 @@
 import jsonlines from 'jsonlines';
 import path from 'path';
-require('dotenv').config();
-const stream = require('stream');
 import fs from 'fs';
+import fsPromise from 'fs/promises';
 
 export function createJsonLFileStream(dataFilePath) {
   const source = fs.createReadStream(dataFilePath);
@@ -19,38 +18,21 @@ export function createJsonLFileWriteStream(dataFilePath) {
   return stringifier;
 }
 
-function createFilesDirIfNotExists(filename) {
+export function createFilesDirIfNotExists(filename) {
   const dir = path.dirname(filename);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
 }
 
-//function for creating appclient for mozunodesdk
-
-export function createAppsClientMozu(validate: boolean = false) {
-  var appClient = require('mozu-node-sdk/clients/platform/application')({
-    context: {
-      appKey: process.env.KIBO_CLIENT_ID,
-      sharedSecret: process.env.KIBO_SHARED_SECRET,
-      baseUrl: process.env.KIBO_API_BASE_URL,
-      tenant: process.env.KIBO_TENANT,
-      siteId: process.env.KIBO_SITE_ID,
-      masterCatalogId: process.env.KIBO_MASTER_CATALOG_ID,
-      catalogId: process.env.KIBO_CATALOG_ID,
-    },
-    //plugins: [FiddlerProxy({ url: 'http://localhost:8866' })]
-  });
-  if (validate) {
-    if (!appClient.context.tenant) {
-      throw new Error('missing env var "KIBO_TENANT"');
-    }
-    if (!appClient.context.appKey) {
-      throw new Error('missing env var "KIBO_CLIENT_ID"');
-    }
-    if (!appClient.context.sharedSecret) {
-      throw new Error('missing env var "KIBO_SHARED_SECRET"');
-    }
+export async function isValidZip(path) {
+  if (!path.endsWith('.zip')) {
+    throw new Error('invalid file type, use zip');
   }
-  return appClient;
+  try {
+    await fsPromise.access(path);
+  } catch (error) {
+    console.error(error);
+    throw new Error(`import file not found or inaccessible. path ${path}`);
+  }
 }

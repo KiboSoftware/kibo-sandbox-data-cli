@@ -1,6 +1,14 @@
 #! /usr/bin/env node
-const createAppsClientMozu = require('../dist/utilites').createAppsClientMozu;
+const createAppsClientMozu = require('../dist/profile').createAppsClientMozu;
+const yenv = require('yenv');
 const fs = require('fs');
+const path = require('path');
+const profiles = {
+  IMPORT: 'import',
+  EXPORT: 'export',
+  DELETE: 'clear',
+};
+const app = require('../dist/index');
 const args = require('yargs/yargs')(process.argv.slice(2))
   .option('all', {
     alias: 'a',
@@ -70,6 +78,13 @@ const args = require('yargs/yargs')(process.argv.slice(2))
     },
   })
   .command({
+    command: 'sync',
+    desc: 'sync --all ',
+    handler: (argv) => {
+      syncData(argv);
+    },
+  })
+  .command({
     command: 'initDataDir',
     desc: 'initDataDir #copies default data directory',
     handler: (argv) => {
@@ -78,33 +93,60 @@ const args = require('yargs/yargs')(process.argv.slice(2))
   })
   .command({
     command: 'initEnv',
-    desc: 'initEnv #copies creates an empty .env file',
+    desc: 'initEnv #copies creates an empty .env.yaml file',
     handler: (argv) => {
-      initEnv(argv);
+      initEnvYaml(argv);
     },
   })
   .demandCommand()
   .strict()
   .help().argv;
 
-function validateCfg() {
+function validateCfg(envProfile) {
   try {
-    createAppsClientMozu(true);
+    createAppsClientMozu(true, envProfile);
   } catch (error) {
     console.error(error.message);
     process.exit(1);
   }
 }
-function initEnv(argv) {
-  const template = `KIBO_CLIENT_ID=
-KIBO_SHARED_SECRET=
-KIBO_API_BASE_URL=https://home.mozu.com
-KIBO_TENANT=
-KIBO_SITE_ID=
-KIBO_MASTER_CATALOG_ID=1
-KIBO_CATALOG_ID=1`;
-  fs.writeFileSync('.env', template);
-  console.log('update the .env file');
+
+function initEnvYaml(argv) {
+  const template = `
+${profiles.IMPORT}: 
+  KIBO_CLIENT_ID: 
+  KIBO_SHARED_SECRET: 
+  KIBO_API_BASE_URL: https://home.mozu.com
+  KIBO_TENANT: 
+  KIBO_SITE_ID: 
+  KIBO_MASTER_CATALOG_ID: 1
+  KIBO_CATALOG_ID: 1
+
+${profiles.EXPORT}:
+  KIBO_CLIENT_ID: 
+  KIBO_SHARED_SECRET: 
+  KIBO_API_BASE_URL: https://home.mozu.com
+  KIBO_TENANT: 
+  KIBO_SITE_ID: 
+  KIBO_MASTER_CATALOG_ID: 1
+  KIBO_CATALOG_ID: 1
+
+${profiles.DELETE}:
+  KIBO_CLIENT_ID: 
+  KIBO_SHARED_SECRET: 
+  KIBO_API_BASE_URL: https://home.mozu.com
+  KIBO_TENANT: 
+  KIBO_SITE_ID: 
+  KIBO_MASTER_CATALOG_ID: 1
+  KIBO_CATALOG_ID: 1
+`;
+  fs.writeFileSync('.env.yaml', template);
+  console.log('update the .env.yaml file');
+}
+
+function getEnvProfile(argv, profile) {
+  const ymlPath = path.resolve(argv.configPath || '.env.yaml');
+  return yenv(ymlPath, { env: profile });
 }
 function validatePath(cfg) {
   if (!fs.existsSync(cfg.data)) {
@@ -114,8 +156,9 @@ function validatePath(cfg) {
 }
 
 async function importData(argv) {
-  validateCfg();
-  const app = require('../dist/index');
+  const importEnv = getEnvProfile(argv, profiles.IMPORT);
+  validateCfg(importEnv);
+  app.setActiveProfile(importEnv);
   validatePath(argv);
   if (argv.all) {
     await app.importAllData(argv);
@@ -147,12 +190,31 @@ async function importData(argv) {
   if (argv.documents) {
     await app.importAllDocuments(argv);
   }
+  if (argv.orderRouting) {
+    await app.importOrderRouting(argv);
+  }
+  if (argv.locationGroups) {
+    await app.importAllLocationGroups(argv);
+  }
+  if (argv.locationGroupConfigurations) {
+    await app.importAllLocationGroupConfigurations(argv);
+  }
+  if (argv.generalSettings) {
+    await app.importGeneralSettings(argv);
+  }
+  if (argv.inventory) {
+    await app.importAllInventory(argv);
+  }
+  if (argv.channels) {
+    await app.importAllChannels(argv);
+  }
 }
 async function exportData(argv) {
-  validateCfg();
-  const app = require('../dist/index');
+  const exportEnv = getEnvProfile(argv, profiles.EXPORT);
+  validateCfg(exportEnv);
+  app.setActiveProfile(exportEnv);
   if (argv.all) {
-    app.exportAllData(argv);
+    await app.exportAllData(argv);
   }
 
   if (argv.productAttributes) {
@@ -182,12 +244,31 @@ async function exportData(argv) {
   if (argv.documents) {
     await app.exportAllDocuments(argv);
   }
+  if (argv.orderRouting) {
+    await app.exportOrderRouting(argv);
+  }
+  if (argv.locationGroups) {
+    await app.exportAllLocationGroups(argv);
+  }
+  if (argv.locationGroupConfigurations) {
+    await app.exportAllLocationGroupConfigurations(argv);
+  }
+  if (argv.generalSettings) {
+    await app.exportGeneralSettings(argv);
+  }
+  if (argv.inventory) {
+    await app.exportAllInventory(argv);
+  }
+  if (argv.channels) {
+    await app.exportAllChannels(argv);
+  }
 }
 async function clearData(argv) {
-  validateCfg();
-  const app = require('../dist/index');
+  const deleteEnv = getEnvProfile(argv, profiles.DELETE);
+  validateCfg(deleteEnv);
+  app.setActiveProfile(exportEnv);
   if (argv.all) {
-    app.deleteAllData(argv);
+    await app.deleteAllData(argv);
   }
 
   if (argv.productAttributes) {
@@ -217,4 +298,9 @@ async function clearData(argv) {
   if (argv.documents) {
     await app.deleteAllDocuments(argv);
   }
+}
+
+async function syncData(argv) {
+  await exportData(argv);
+  await importData(argv);
 }
