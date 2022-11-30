@@ -46,7 +46,7 @@ export async function pollJob(jobStatus: (id) => Promise<any>, id) {
     if (resp.isComplete) {
       break;
     }
-    console.log(`polling status:  ${resp.status}`);
+    console.log(`polling status:  ${resp.status || 'submitted'}`);
   }
   console.log(`jobid: ${id}\nstatus:  ${resp.status}`);
   if (resp.statusMessage) {
