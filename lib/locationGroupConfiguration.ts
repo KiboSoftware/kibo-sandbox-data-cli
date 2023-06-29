@@ -16,8 +16,8 @@ let appsClient, locationGroups, locationConfigClient;
 function initClients() {
   appsClient = createAppsClientMozu();
 
-  locationGroups = require('../clients/location-groups')(appsClient);
-  locationConfigClient = require('../clients/location-group-configuration')(
+  locationGroups = require('./clients/location-groups')(appsClient);
+  locationConfigClient = require('./clients/location-group-configuration')(
     appsClient
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "@kibocommerce/kibo-sandbox-data-cli",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "kibo sandbox data cli",
   "bin": {
     "kibo-sandbox-data": "./bin/index.js"
@@ -39,5 +39,8 @@
   },
   "lint-staged": {
     "lib/*": "prettier --write ."
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }

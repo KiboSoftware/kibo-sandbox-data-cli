@@ -16,7 +16,7 @@ let appsClient, orderRoutingExport;
 function initClients() {
   appsClient = createAppsClientMozu();
 
-  orderRoutingExport = require('../clients/order-routing-export-import')(
+  orderRoutingExport = require('./clients/order-routing-export-import')(
     appsClient
   );
 }

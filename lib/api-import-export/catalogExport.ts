@@ -15,7 +15,7 @@ nconf.argv();
 let appsClient, exportClient, tenantClient;
 function initClients() {
   appsClient = createAppsClientMozu();
-  exportClient = require('../../clients/export')(appsClient);
+  exportClient = require('../clients/export')(appsClient);
   tenantClient = require('mozu-node-sdk/clients/platform/tenant')(appsClient);
 }
 const dataFilePath = path.join(

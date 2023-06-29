@@ -20,7 +20,7 @@ let appsClient, importClient, tenantClient;
 
 function initClients() {
   appsClient = createAppsClientMozu();
-  importClient = require('../../clients/import')(appsClient);
+  importClient = require('../clients/import')(appsClient);
   tenantClient = require('mozu-node-sdk/clients/platform/tenant')(appsClient);
 }
 const pathSegments = [];

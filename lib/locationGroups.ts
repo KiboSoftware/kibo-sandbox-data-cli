@@ -15,7 +15,7 @@ const dataFilePath = require('path').join(
 let appsClient, locationGroupsClient;
 function initClients() {
   appsClient = createAppsClientMozu();
-  locationGroupsClient = require('../clients/location-groups')(appsClient);
+  locationGroupsClient = require('./clients/location-groups')(appsClient);
 }
 
 const generateLocationGroup = async (locationGroup) => {
