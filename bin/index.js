@@ -56,6 +56,26 @@ const args = require('yargs/yargs')(process.argv.slice(2))
     describe: 'include productTypes',
     type: 'boolean',
   })
+  .option('orderRouting', {
+    describe: 'include orderRouting',
+    type: 'boolean',
+  })
+  .option('inventory', {
+    describe: 'include inventory',
+    type: 'boolean',
+  })
+  .option('locationGroups', {
+    describe: 'include inventory',
+    type: 'boolean',
+  })
+  .option('locationGroupConfigurations', {
+    describe: 'include inventory',
+    type: 'boolean',
+  })  
+  .option('channels', {
+    describe: 'include inventory',
+    type: 'boolean',
+  }) 
   .command({
     command: 'export',
     desc: 'export --categoies --documents banners,hero_images ',
