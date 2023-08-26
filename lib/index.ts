@@ -176,6 +176,7 @@ export {
   importGeneralSettings,
   importAllCarrierConfigurations,
   importAllCatalogByAPI,
+  importAllInventory,
   exportCategories,
   exportAllCatalogByAPI,
   exportAllChannels,
