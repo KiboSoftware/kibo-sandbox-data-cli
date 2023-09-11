@@ -28,6 +28,10 @@ const args = require('yargs/yargs')(process.argv.slice(2))
     describe: 'include discounts',
     type: 'boolean',
   })
+  .option('catalogSet', {
+    describe: 'include catalog csvs',
+    type: 'boolean',
+  })
   .option('documents', {
     describe: 'include documents from an array of lists',
     type: 'array',
@@ -192,6 +196,9 @@ async function importData(argv) {
   if (argv.categories) {
     await app.importCategories(argv);
   }
+  if( argv.catalogSet) {
+    await app.importAllCatalogByAPI(argv);
+  }
   if (argv.products) {
     await app.importAllProducts(argv);
   }
@@ -251,6 +258,9 @@ async function exportData(argv) {
   }
   if (argv.locations) {
     await app.exportAllLocations(argv);
+  }
+  if( argv.catalogSet) {
+    await app.exportAllCatalogByAPI(argv);
   }
   if (argv.discounts) {
     await app.exportAllDiscounts(argv);
