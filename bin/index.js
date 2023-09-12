@@ -75,11 +75,11 @@ const args = require('yargs/yargs')(process.argv.slice(2))
   .option('locationGroupConfigurations', {
     describe: 'include inventory',
     type: 'boolean',
-  })  
+  })
   .option('channels', {
     describe: 'include inventory',
     type: 'boolean',
-  }) 
+  })
   .command({
     command: 'export',
     desc: 'export --categoies --documents banners,hero_images ',
@@ -196,7 +196,7 @@ async function importData(argv) {
   if (argv.categories) {
     await app.importCategories(argv);
   }
-  if( argv.catalogSet) {
+  if (argv.catalogSet) {
     await app.importAllCatalogByAPI(argv);
   }
   if (argv.products) {
@@ -259,7 +259,7 @@ async function exportData(argv) {
   if (argv.locations) {
     await app.exportAllLocations(argv);
   }
-  if( argv.catalogSet) {
+  if (argv.catalogSet) {
     await app.exportAllCatalogByAPI(argv);
   }
   if (argv.discounts) {

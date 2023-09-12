@@ -44,6 +44,8 @@ export async function pollJob(jobStatus: (id) => Promise<any>, id) {
     await setTimeout(5000);
     resp = await jobStatus(id);
     if (resp.isComplete) {
+      await setTimeout(15000);
+      resp = await jobStatus(id);
       break;
     }
     console.log(`polling status:  ${resp.status || 'submitted'}`);

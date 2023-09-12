@@ -208,11 +208,18 @@ export async function exportAllProducts() {
     if (productDetail.productUsage !== 'Configurable') {
       continue;
     }
-    for await (let variation of exportProductVariations(
-      productDetail.productCode
-    )) {
-      variation.productCode = productDetail.productCode;
-      await variationStream.write(variation);
+    try {
+      for await (let variation of exportProductVariations(
+        productDetail.productCode
+      )) {
+        variation.productCode = productDetail.productCode;
+        await variationStream.write(variation);
+      }
+    } catch (error) {
+      console.error(
+        `Error in exporting product variation ${productDetail.productCode}`,
+        error
+      );
     }
   }
   spinner.stop(true);
