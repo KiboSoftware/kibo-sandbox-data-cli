@@ -32,6 +32,30 @@ const args = require('yargs/yargs')(process.argv.slice(2))
     describe: 'include catalog csvs',
     type: 'boolean',
   })
+  .option('fulfillmentSettings', {
+    describe: 'include fulfillmentSettings',
+    type: 'boolean',
+  })
+  .option('b2bAttributes', {
+    describe: 'include b2bAttributes',
+    type: 'boolean',
+  })
+  .option('customerAttributes', {
+    describe: 'include customerAttributes',
+    type: 'boolean',
+  })
+  .option('locationAttributes', {
+    describe: 'include locationAttributes',
+    type: 'boolean',
+  })
+  .option('categoryAttributes', {
+    describe: 'include categoryAttributes',
+    type: 'boolean',
+  })
+  .option('orderAttributes', {
+    describe: 'include orderAttributes',
+    type: 'boolean',
+  })
   .option('documents', {
     describe: 'include documents from an array of lists',
     type: 'array',
@@ -233,6 +257,24 @@ async function importData(argv) {
   if (argv.generalSettings) {
     await app.importGeneralSettings(argv);
   }
+  if (argv.fulfillmentSettings) {
+    await app.importFulfillmentSettings(argv);
+  }
+  if (argv.b2bAttributes) {
+    await app.importB2BAttributes(argv);
+  }
+  if (argv.customerAttributes) {
+    await app.importCustomerAttributes(argv);
+  }
+  if (argv.locationAttributes) {
+    await app.importLocationAttributes(argv);
+  }
+  if (argv.categoryAttributes) {
+    await app.importCategoryAttributes(argv);
+  }
+  if (argv.orderAttributes) {
+    await app.importOrderAttributes(argv);
+  }
   if (argv.inventory) {
     await app.importAllInventory(argv);
   }
@@ -292,6 +334,24 @@ async function exportData(argv) {
   }
   if (argv.generalSettings) {
     await app.exportGeneralSettings(argv);
+  }
+  if (argv.fulfillmentSettings) {
+    await app.exportFulfillmentSettings(argv);
+  }
+  if (argv.b2bAttributes) {
+    await app.exportB2BAttributes(argv);
+  }
+  if (argv.customerAttributes) {
+    await app.exportCustomerAttributes(argv);
+  }
+  if (argv.locationAttributes) {
+    await app.exportLocationAttributes(argv);
+  }
+  if (argv.categoryAttributes) {
+    await app.exportCategoryAttributes(argv);
+  }
+  if (argv.orderAttributes) {
+    await app.exportOrderAttributes(argv);
   }
   if (argv.inventory) {
     await app.exportAllInventory(argv);
