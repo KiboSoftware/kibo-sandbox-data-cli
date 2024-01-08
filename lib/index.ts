@@ -41,6 +41,26 @@ import {
   exportFulfillmentSettings,
 } from './fulfillmentSettings';
 import {
+  importB2BAttributes,
+  exportB2BAttributes,
+} from './b2bAttributes';
+import {
+  importCustomerAttributes,
+  exportCustomerAttributes,
+} from './customerAttributes';
+import {
+  importLocationAttributes,
+  exportLocationAttributes,
+} from './locationAttributes';
+import {
+  importCategoryAttributes,
+  exportCategoryAttributes,
+} from './categoryAttributes';
+import {
+  importOrderAttributes,
+  exportOrderAttributes,
+} from './orderAttributes';
+import {
   importAllCarrierConfigurations,
   exportAllCarrierConfigurations,
 } from './carrierConfiguration';
@@ -106,6 +126,11 @@ const importAllData = () => {
     importGeneralSettings,
     importFulfillmentSettings,
     importAllCarrierConfigurations,
+    importB2BAttributes,
+    importCustomerAttributes,
+    importLocationAttributes,
+    importCategoryAttributes,
+    importOrderAttributes,
     importAllInventory,
     importOrderRouting,
     importAllDiscounts,
@@ -128,6 +153,11 @@ const exportAllData = () => {
     exportAllLocationGroups,
     exportAllLocationGroupConfigurations,
     exportAllCarrierConfigurations,
+    exportB2BAttributes,
+    exportCustomerAttributes,
+    exportLocationAttributes,
+    exportCategoryAttributes,
+    exportOrderAttributes,  
     exportAllInventory,
     exportOrderRouting,
     exportAllDocumentTypes,
@@ -205,4 +235,14 @@ export {
   exportOrderRouting,
   exportAllCarrierConfigurations,
   exportFulfillmentSettings,
+  importB2BAttributes,
+  exportB2BAttributes,
+  importCustomerAttributes,
+  exportCustomerAttributes,
+  importLocationAttributes,
+  exportLocationAttributes,
+  importCategoryAttributes,
+  exportCategoryAttributes,
+  importOrderAttributes,
+  exportOrderAttributes,
 };
