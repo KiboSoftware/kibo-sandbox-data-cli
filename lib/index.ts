@@ -50,6 +50,7 @@ import {
   seedInventory,
 } from './inventory';
 import { exportAllChannels, importAllChannels } from './channel';
+import { exportAllSearch, importAllSearch } from './search';
 
 import {
   deleteAllDiscounts,
@@ -132,6 +133,7 @@ const exportAllData = () => {
     exportAllDocumentTypes,
     exportAllDocumentLists,
     exportAllDocuments,
+    exportAllSearch,
   ].reduce(taskReducer, Promise.resolve());
 };
 
@@ -179,6 +181,7 @@ export {
   importAllDocumentTypes,
   importAllDocumentLists,
   importAllDocuments,
+  importAllSearch,
   importGeneralSettings,
   importAllCarrierConfigurations,
   importAllCatalogByAPI,
@@ -197,6 +200,7 @@ export {
   exportAllDocumentTypes,
   exportAllDocumentLists,
   exportAllDocuments,
+  exportAllSearch,
   exportAllInventory,
   exportOrderRouting,
   exportAllCarrierConfigurations,
