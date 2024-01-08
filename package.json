@@ -1,6 +1,6 @@
 {
   "name": "@kibocommerce/kibo-sandbox-data-cli",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "kibo sandbox data cli",
   "bin": {
     "kibo-sandbox-data": "./bin/index.js"
