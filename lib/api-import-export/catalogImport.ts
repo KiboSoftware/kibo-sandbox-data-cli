@@ -195,6 +195,6 @@ export async function importAllCatalogByAPI() {
     console.log('import catalog via api failed');
   } finally {
     spinner.stop();
-    await cleanupTemp();
+    //await cleanupTemp();
   }
 }

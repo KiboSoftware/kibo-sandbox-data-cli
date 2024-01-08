@@ -80,6 +80,10 @@ const args = require('yargs/yargs')(process.argv.slice(2))
     describe: 'include inventory',
     type: 'boolean',
   })
+  .option('search', {
+    describe: 'include search',
+    type: 'boolean',
+  })
   .command({
     command: 'export',
     desc: 'export --categoies --documents banners,hero_images ',
@@ -235,6 +239,9 @@ async function importData(argv) {
   if (argv.channels) {
     await app.importAllChannels(argv);
   }
+  if (argv.search) {
+    await app.importAllSearch(argv);
+  }
 }
 async function exportData(argv) {
   const exportEnv = getEnvProfile(argv, profiles.EXPORT);
@@ -291,6 +298,9 @@ async function exportData(argv) {
   }
   if (argv.channels) {
     await app.exportAllChannels(argv);
+  }
+  if (argv.search) {
+    await app.exportAllSearch(argv);
   }
 }
 async function clearData(argv) {
