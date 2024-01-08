@@ -109,3 +109,14 @@ Options:
       --productTypes       include productTypes                        [boolean]
       --help               Show help                                   [boolean]
 ```
+
+## Development
+
+```
+git clone https://github.com/KiboSoftware/kibo-sandbox-data-cli
+cd kibo-sandbox-data-cli
+npm install
+
+# Then for example, testing the search feature
+npm run build && node bin/index.js export --search
+```
