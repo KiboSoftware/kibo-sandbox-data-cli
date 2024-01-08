@@ -37,6 +37,10 @@ import {
   exportGeneralSettings,
 } from './generalSettings';
 import {
+  importFulfillmentSettings,
+  exportFulfillmentSettings,
+} from './fulfillmentSettings';
+import {
   importAllCarrierConfigurations,
   exportAllCarrierConfigurations,
 } from './carrierConfiguration';
@@ -99,6 +103,7 @@ const importAllData = () => {
     importAllLocationGroups,
     importAllLocationGroupConfigurations,
     importGeneralSettings,
+    importFulfillmentSettings,
     importAllCarrierConfigurations,
     importAllInventory,
     importOrderRouting,
@@ -116,6 +121,7 @@ const exportAllData = () => {
     exportAllCatalogByAPI,
     exportAllChannels,
     exportGeneralSettings,
+    exportFulfillmentSettings,
     exportAllDiscounts,
     exportAllLocations,
     exportAllLocationGroups,
@@ -177,6 +183,7 @@ export {
   importAllCarrierConfigurations,
   importAllCatalogByAPI,
   importAllInventory,
+  importFulfillmentSettings,
   exportCategories,
   exportAllCatalogByAPI,
   exportAllChannels,
@@ -193,4 +200,5 @@ export {
   exportAllInventory,
   exportOrderRouting,
   exportAllCarrierConfigurations,
+  exportFulfillmentSettings,
 };

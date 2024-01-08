@@ -32,6 +32,10 @@ const args = require('yargs/yargs')(process.argv.slice(2))
     describe: 'include catalog csvs',
     type: 'boolean',
   })
+  .option('fulfillmentSettings', {
+    describe: 'include fulfillmentSettings',
+    type: 'boolean',
+  })
   .option('documents', {
     describe: 'include documents from an array of lists',
     type: 'array',
@@ -80,6 +84,7 @@ const args = require('yargs/yargs')(process.argv.slice(2))
     describe: 'include inventory',
     type: 'boolean',
   })
+  
   .command({
     command: 'export',
     desc: 'export --categoies --documents banners,hero_images ',
@@ -229,6 +234,9 @@ async function importData(argv) {
   if (argv.generalSettings) {
     await app.importGeneralSettings(argv);
   }
+  if (argv.fulfillmentSettings) {
+    await app.importFulfillmentSettings(argv);
+  }
   if (argv.inventory) {
     await app.importAllInventory(argv);
   }
@@ -285,6 +293,9 @@ async function exportData(argv) {
   }
   if (argv.generalSettings) {
     await app.exportGeneralSettings(argv);
+  }
+  if (argv.fulfillmentSettings) {
+    await app.exportFulfillmentSettings(argv);
   }
   if (argv.inventory) {
     await app.exportAllInventory(argv);
