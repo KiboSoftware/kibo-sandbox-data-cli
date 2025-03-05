@@ -36,6 +36,14 @@ const args = require('yargs/yargs')(process.argv.slice(2))
     describe: 'include fulfillmentSettings',
     type: 'boolean',
   })
+  .option('generalSettings', {
+    describe: 'include generalSettings',
+    type: 'boolean',
+  })
+  .option('returnSettings', {
+    describe: 'include returnSettings',
+    type: 'boolean',
+  })
   .option('b2bAttributes', {
     describe: 'include b2bAttributes',
     type: 'boolean',
@@ -86,7 +94,8 @@ const args = require('yargs/yargs')(process.argv.slice(2))
   })
   .option('orderRouting', {
     describe: 'include orderRouting',
-    type: 'boolean',
+    type: 'number',
+    description: 'The environment ID must be included'
   })
   .option('inventory', {
     describe: 'include inventory',
@@ -106,6 +115,10 @@ const args = require('yargs/yargs')(process.argv.slice(2))
   })
   .option('search', {
     describe: 'include search',
+    type: 'boolean',
+  })
+  .option('carrierConfigurations', {
+    describe: 'include carrier configurations',
     type: 'boolean',
   })
   .command({
@@ -257,6 +270,9 @@ async function importData(argv) {
   if (argv.generalSettings) {
     await app.importGeneralSettings(argv);
   }
+  if (argv.returnSettings) {
+    await app.importReturnSettings(argv);
+  }
   if (argv.fulfillmentSettings) {
     await app.importFulfillmentSettings(argv);
   }
@@ -338,6 +354,9 @@ async function exportData(argv) {
   if (argv.fulfillmentSettings) {
     await app.exportFulfillmentSettings(argv);
   }
+  if (argv.returnSettings) {
+    await app.exportReturnSettings(argv);
+  }
   if (argv.b2bAttributes) {
     await app.exportB2BAttributes(argv);
   }
@@ -361,6 +380,9 @@ async function exportData(argv) {
   }
   if (argv.search) {
     await app.exportAllSearch(argv);
+  }
+  if(argv.carrierConfigurations){
+    await app.exportAllCarrierConfigurations(argv)
   }
 }
 async function clearData(argv) {
