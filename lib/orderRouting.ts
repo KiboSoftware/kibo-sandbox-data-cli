@@ -55,7 +55,7 @@ const getOrderRoutingConfig = async ({ tenantID, siteID, environmentID }) => {
     console.error('unable to fetch order routing', error);
   }
 };
-export async function exportOrderRouting() {
+export async function exportOrderRouting(argv) {
   var spinner = new Spinner('exporting order routing.. %s');
   spinner.start();
   initClients();
@@ -63,7 +63,7 @@ export async function exportOrderRouting() {
   const config = await getOrderRoutingConfig({
     tenantID: appsClient.tenant,
     siteID: appsClient.site,
-    environmentID: 1,
+    environmentID: argv.orderRouting,
   });
   await stream.write(config);
   spinner.stop(true);

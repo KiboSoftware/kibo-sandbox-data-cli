@@ -41,6 +41,10 @@ import {
   exportFulfillmentSettings,
 } from './fulfillmentSettings';
 import {
+  importReturnSettings,
+  exportReturnSettings,
+} from './returnSettings';
+import {
   importB2BAttributes,
   exportB2BAttributes,
 } from './b2bAttributes';
@@ -125,6 +129,7 @@ const importAllData = () => {
     importAllLocationGroupConfigurations,
     importGeneralSettings,
     importFulfillmentSettings,
+    importReturnSettings,
     importAllCarrierConfigurations,
     importB2BAttributes,
     importCustomerAttributes,
@@ -148,6 +153,7 @@ const exportAllData = () => {
     exportAllChannels,
     exportGeneralSettings,
     exportFulfillmentSettings,
+    exportReturnSettings,
     exportAllDiscounts,
     exportAllLocations,
     exportAllLocationGroups,
@@ -199,6 +205,7 @@ export {
   deleteAllDocuments,
   deleteAllDocumentLists,
   deleteAllDocumentTypes,
+  importOrderRouting,
   importAllChannels,
   importAllLocations,
   importAllLocationGroups,
@@ -217,6 +224,7 @@ export {
   importAllCatalogByAPI,
   importAllInventory,
   importFulfillmentSettings,
+  importReturnSettings,
   exportCategories,
   exportAllCatalogByAPI,
   exportAllChannels,
@@ -226,6 +234,7 @@ export {
   exportAllLocations,
   exportAllLocationGroups,
   exportAllLocationGroupConfigurations,
+  exportGeneralSettings,
   exportAllDiscounts,
   exportAllDocumentTypes,
   exportAllDocumentLists,
@@ -235,6 +244,7 @@ export {
   exportOrderRouting,
   exportAllCarrierConfigurations,
   exportFulfillmentSettings,
+  exportReturnSettings,
   importB2BAttributes,
   exportB2BAttributes,
   importCustomerAttributes,
@@ -244,5 +254,5 @@ export {
   importCategoryAttributes,
   exportCategoryAttributes,
   importOrderAttributes,
-  exportOrderAttributes,
+  exportOrderAttributes
 };
